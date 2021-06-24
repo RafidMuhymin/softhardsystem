@@ -1,0 +1,19 @@
+button[type="submit"] {
+  div {
+    border: 0.25rem solid lightgray;
+    border-top: 0.25rem solid cornflowerblue;
+    border-radius: 50%;
+    height: 2.5rem;
+    width: 2.5rem;
+    animation: spin 2s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

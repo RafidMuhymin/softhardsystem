@@ -1,0 +1,19 @@
+#comment-form {
+  button {
+    background-image: linear-gradient(
+      0deg,
+      #009ad6 0%,
+      #009ad6 50%,
+      #01f7ff 100%
+    );
+    color: white;
+    border-radius: 1em;
+    &:hover {
+      background-image: linear-gradient(0deg, #009ad6 0%, #009ad6 100%);
+    }
+  }
+  input,
+  textarea {
+    background-color: #f0fdff;
+  }
+}

@@ -1,0 +1,25 @@
+#not-found {
+  img {
+    margin-top: -2.5em;
+  }
+  #subscription-form {
+    color: white;
+    background-image: linear-gradient(135deg, crimson 0%, blueviolet 100%);
+    padding: 1.5em;
+    border-radius: 1em;
+  }
+  #subscribe-btn {
+    background-color: #00bb7d;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  #not-found {
+    width: 80%;
+  }
+}
+@media screen and (min-width: 992px) {
+  #not-found {
+    width: 60%;
+  }
+}

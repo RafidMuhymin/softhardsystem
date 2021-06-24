@@ -1,0 +1,14 @@
+#search-widget {
+  input {
+    height: 2.25em;
+    &[type="submit"] {
+      background: none;
+      border: none;
+      outline: 0;
+      opacity: 0.75;
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}

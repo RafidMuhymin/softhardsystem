@@ -1,0 +1,15 @@
+.comment-box {
+  .image-holder {
+    width: 15%;
+  }
+  .comment-details {
+    width: 75%;
+  }
+  .reply-button {
+    border: 1px solid blueviolet;
+    color: blueviolet;
+    &:hover {
+      color: crimson;
+    }
+  }
+}

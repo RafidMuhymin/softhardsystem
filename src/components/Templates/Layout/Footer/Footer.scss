@@ -1,0 +1,23 @@
+#footer {
+  a {
+    padding: 0.5em;
+    color: white;
+
+    &:visited {
+      color: white;
+    }
+    &:hover {
+      color: #ffa500;
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  #copyright {
+    width: 100%;
+    margin: 1em auto;
+  }
+  #footer {
+    text-align: center;
+    justify-content: center;
+  }
+}

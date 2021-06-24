@@ -1,0 +1,20 @@
+#loading-spinner {
+  height: 12.5rem;
+  div {
+    border: 0.75rem solid lightgray;
+    border-top: 0.75rem solid cornflowerblue;
+    border-radius: 50%;
+    height: 7.5rem;
+    width: 7.5rem;
+    animation: spin 2s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

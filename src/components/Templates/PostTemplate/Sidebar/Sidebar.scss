@@ -1,0 +1,26 @@
+#sidebar {
+  border-left: 1px solid lightgray;
+  form#search-widget {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+    input {
+      &:first-of-type {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #sidebar {
+    border: none;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  #sidebar {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
