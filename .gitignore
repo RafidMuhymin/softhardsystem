@@ -2,4 +2,10 @@
 .gitignore
 node_modules
 dist
-public/images/*
+public/images/*.png
+public/images/*.jpg
+public/images/*.jpeg
+public/images/*.svg
+public/images/*.webp
+public/images/*.avif
+public/images/*.gif
