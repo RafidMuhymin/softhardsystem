@@ -2,4 +2,4 @@
 .gitignore
 node_modules
 dist
-public/images
+public/images/*
