@@ -77,7 +77,7 @@ export default async function (returnLegalDocs) {
 
             let itemsProcessed = 0;
 
-            [...document.images].forEach(async (image, index, array) => {
+            const forEachFunction = async (image, callback) => {
               const { href, hostname } = new URL(image.src);
               const src = await getFilename(href, hostname);
               image.src = src ? src : image.src;
@@ -95,11 +95,16 @@ export default async function (returnLegalDocs) {
                   })
                 )
               ).join(" ");
+              callback();
+            };
 
-              itemsProcessed++;
-              if ((itemsProcessed = array.length)) {
-                post.content.rendered = document.body.innerHTML;
-              }
+            [...document.images].forEach(async (image, index, array) => {
+              forEachFunction(image, () => {
+                itemsProcessed++;
+                if ((itemsProcessed = array.length)) {
+                  post.content.rendered = document.body.innerHTML;
+                }
+              });
             });
           });
           return posts;
