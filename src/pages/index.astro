@@ -12,7 +12,6 @@ const posts = await fetchWPData();
   <div class="flex md:flex-col p-12 gap-12">
     <section class="latests w-2/3 md:w-full">
       <h3 class="text-red-600">Latest Articles</h3>
-      <ReactComponent />
       <div class="flex flex-col gap-6">
         {posts.map((post) => {
           const title = post.title.rendered.slice(9);
