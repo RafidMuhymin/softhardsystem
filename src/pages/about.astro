@@ -1,0 +1,11 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+global.authorData = global.authorData ? global.authorData : await (
+  await fetch("https://wp.softhardsystem.com/wp-json/wp/v2/users/1")
+).json();
+---
+
+<Layout title="About">
+    <h1>About me!</h1>
+</Layout>

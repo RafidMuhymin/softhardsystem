@@ -1,0 +1,81 @@
+<input type="checkbox" id="checkbox" class="hidden" />
+
+<header id="header" class="bg-blue-200">
+  <div
+  id="header"
+  class="
+    flex flex-wrap
+    items-center
+    font-medium
+    px-12
+    pt-8
+    max-w-[1200px]
+    mx-auto
+    xl:px-10 xl:justify-center
+    md:justify-between md:flex-col md:flex-nowrap
+  "
+>
+  <div class="md:flex items-center justify-between md:w-full">
+    <a
+      href="/"
+      class="logo"
+      >Soft Hard System</a
+    >
+    <button id="menubar" class="hidden md:inline-block text-[0rem]">
+      Menu Button
+      <div class="w-6 h-1 m-2 bg-black transition-all duration-1000"></div>
+      <div class="w-6 h-1 m-2 bg-black transition-all duration-1000"></div>
+    </button>
+  </div>
+  <nav
+    class="
+      flex flex-grow
+      xl:flex-grow-0
+      md:flex-grow md:flex-col
+      justify-evenly
+      md:text-center
+    "
+  >
+    <a href="/about">Rafid Muhymin Wafi</a>
+    <a href="/category/soft">Soft</a>
+    <a href="/category/hard">Hard</a>
+    <a href="/category/system">System</a>
+  </nav>
+  <form
+    class="
+      m-2
+      relative
+      max-w-full
+      mx-auto
+      md:hidden md:relative md:my-[calc(8vh-0.4rem)]
+    "
+    onsubmit="navigate('search?' + this.query.value)"
+  >
+    <input
+      type="text"
+      placeholder="Search …"
+      name="query"
+      class="form-control w-full"
+    />
+    <input
+      type="submit"
+      class="
+        bg-transparent
+        absolute
+        right-1
+        top-2/4
+        -translate-y-2/4
+        opacity-70
+        transition-opacity
+        duration-300
+        hover:opacity-100 hover:cursor-pointer
+      "
+      value="🔎"
+    />
+  </form>
+</div>
+</header>
+
+<svg viewBox="0 0 976 56.4">
+  <path d="M976 42C544 87 380 6 0 55L1 0h975Z" fill="#bfdbfe" />
+</svg>

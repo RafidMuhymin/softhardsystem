@@ -1,0 +1,22 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import fetchWPData from "../../data/data.js";
+import converter from "number-to-words";
+
+export async function getStaticPaths( { paginate } ) {
+  const posts = await fetchWPData();
+  return paginate(posts, { pageSize: 2 });
+}
+
+const { page } = Astro.props;
+---
+
+<Layout
+  title={`${converter
+    .toWordsOrdinal(page.currentPage)
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ")} Page | Blog`}
+>
+  <h1>I'm page no {page.currentPage}</h1>
+</Layout>

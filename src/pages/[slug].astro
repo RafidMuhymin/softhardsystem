@@ -1,0 +1,44 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PostLayout from "../layouts/PostLayout.astro";
+import fetchWPData from "../data/data.js";
+import { renderMarkdown } from "@astrojs/markdown-support";
+
+export async function getStaticPaths({rss}) {
+  const posts = await fetchWPData();
+  const legalDocs = await fetchWPData(true);
+
+  rss({
+    title: 'Soft Hard System',
+    description: 'A blog by Rafid Muhymin Wafi on Software, Hardware and System (Code)',
+    items: posts.map(item => ({
+      title: item.title.rendered.slice(9),
+      description: item.uagb_excerpt.slice(0, -8),
+      link: item.slug,
+      pubDate: item.date,
+    })),
+  });
+
+  return [...posts, ...legalDocs].map((post) => {
+    return {
+      params: { slug: post.slug },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const title = post.title.rendered.slice(9);
+const content = post.content.rendered;
+---
+
+
+{
+  global.posts.includes(post) ? (
+    <PostLayout title={title}>{content}</PostLayout>
+  ) : (
+    <Layout title={title}>
+      <div class="p-12">{content}</div>
+    </Layout>
+  )
+}
