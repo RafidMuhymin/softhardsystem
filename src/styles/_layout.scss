@@ -76,8 +76,20 @@ strong {
   position: relative;
 }
 
-figcaption p {
-  text-align: center;
+img {
+  @apply mx-auto;
+}
+
+ol {
+  @apply list-decimal pl-4;
+}
+
+ul {
+  @apply list-disc pl-4;
+}
+
+figcaption {
+  @apply text-center italic p-3;
 }
 
 * {

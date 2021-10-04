@@ -35,7 +35,7 @@ const content = post.content.rendered;
 
 {
   global.posts.includes(post) ? (
-    <PostLayout title={title}>{content}</PostLayout>
+    <PostLayout title={title} post={post} />
   ) : (
     <Layout title={title}>
       <div class="p-12">{content}</div>
