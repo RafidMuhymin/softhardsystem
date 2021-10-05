@@ -1,14 +1,17 @@
 ---
-import Layout from "./Layout.astro";
+import Layout from "../Layout.astro";
+import Author from "./Author.astro";
+import Rocket from "./Rocket.astro";
+import Comment from "./Comment.astro";
+import Star from "../../components/Star.astro";
+
 import { createRequire } from "node:module";
 const moduleRequire = createRequire(import.meta.url);
 const { JSDOM } = moduleRequire("jsdom");
 
 const { title, post } = Astro.props;
 
-const { document } = new JSDOM(
-  `<h1>${title}</h1>` + post.content.rendered
-).window;
+const { document } = new JSDOM(`<h1>${title}</h1>` + post.content.rendered).window;
 
 let toc = "";
 let level = 0;
@@ -16,7 +19,7 @@ let headingNumber = 0;
 
 const content = document.body.innerHTML.replace(
   /<h([\d])>([^<]+)<\/h([\d])>/gi,
-  function (str, openLevel, titleText, closeLevel) {
+ (str, openLevel, titleText, closeLevel) => {
     if (openLevel != closeLevel) {
       return str;
     }
@@ -37,16 +40,22 @@ const content = document.body.innerHTML.replace(
 if (level) {
   toc += new Array(level + 1).join("</ul>");
 }
+
 ---
 
 <Layout title={title}>
   <div class="flex md:flex-col">
     <section class="content w-2/3 md:w-full p-8">
-      {content}
+      {content.replace(/<strong>([^]+)<\/strong>/gi, async (str, text) => {
+    return await (<Star>{text}</Star>);
+  })}
+      <Author author={post._embedded.author[0]} />
+      <Comment />
     </section>
     <section class="sidebar w-1/3 md:w-full p-8">
       <h2>Table Of Contents</h2>
       {toc}
+      <Rocket />
     </section>
   </div>
 </Layout>

@@ -1,8 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import PostLayout from "../layouts/PostLayout.astro";
+import PostLayout from "../layouts/PostLayout/PostLayout.astro";
 import fetchWPData from "../data/data.js";
-import { renderMarkdown } from "@astrojs/markdown-support";
 
 export async function getStaticPaths({rss}) {
   const posts = await fetchWPData();
@@ -19,10 +18,16 @@ export async function getStaticPaths({rss}) {
     })),
   });
 
-  return [...posts, ...legalDocs].map((post) => {
+  return [...posts, ...legalDocs].map((post, i, array) => {
     return {
       params: { slug: post.slug },
-      props: { post },
+      props: {
+        post,
+        prevNext: {
+          prev: array[i - 1],
+          next: array[i + 1],
+        },
+      },
     };
   });
 }
