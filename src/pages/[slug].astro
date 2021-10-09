@@ -18,21 +18,21 @@ export async function getStaticPaths({rss}) {
     })),
   });
 
-  return [...posts, ...legalDocs].map((post, i, array) => {
+  return [...posts, ...legalDocs].map((post) => {
     return {
       params: { slug: post.slug },
       props: {
         post,
         prevNext: {
-          prev: array[i - 1],
-          next: array[i + 1],
+          prev: posts[posts.indexOf(post) + 1],
+          next: posts[posts.indexOf(post) - 1],
         },
       },
     };
   });
 }
 
-const { post } = Astro.props;
+const { post, prevNext } = Astro.props;
 const title = post.title.rendered.slice(9);
 const content = post.content.rendered;
 ---
@@ -40,7 +40,7 @@ const content = post.content.rendered;
 
 {
   global.posts.includes(post) ? (
-    <PostLayout title={title} post={post} />
+    <PostLayout title={title} post={post} prevNext={prevNext} />
   ) : (
     <Layout title={title}>
       <div class="p-12">{content}</div>

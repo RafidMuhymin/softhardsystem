@@ -88,8 +88,12 @@ ul {
   @apply list-disc pl-4;
 }
 
+figure {
+  @apply py-4;
+}
+
 figcaption {
-  @apply text-center italic p-3;
+  @apply text-center italic p-4;
 }
 
 * {
@@ -100,6 +104,15 @@ figcaption {
   }
   &:focus:not(:focus-visible) {
     outline: none;
+  }
+}
+
+.form-control {
+  @apply shadow appearance-none rounded py-2 px-3 text-gray-700 leading-tight;
+  transition: outline 0.25s, outline-offset 0.25s;
+  &:focus {
+    outline: 0.2rem dotted crimson;
+    outline-offset: 0.5rem;
   }
 }
 
@@ -121,5 +134,43 @@ figcaption {
 
   &:focus:not(:focus-visible) {
     outline: none;
+  }
+}
+
+.content {
+  > div:not(.comment) {
+    @apply border-b-[0.25rem] border-gray-700;
+  }
+  .comment {
+    h2,
+    h3,
+    button {
+      @apply my-4;
+    }
+    input:focus,
+    textarea:focus {
+      outline: theme("colors.gray.700") dotted 0.25rem;
+      outline-offset: 0.25rem;
+    }
+  }
+}
+
+.pops {
+  span {
+    position: relative;
+    will-change: left;
+    animation: ltr 1s infinite;
+  }
+}
+
+@keyframes ltr {
+  0% {
+    left: -0.25rem;
+  }
+  50% {
+    left: 0.25rem;
+  }
+  100% {
+    left: -0.25rem;
   }
 }

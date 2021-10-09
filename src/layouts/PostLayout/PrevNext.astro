@@ -1,0 +1,28 @@
+---
+const { prev, next } = Astro.props.data;
+---
+
+<div class="flex flex-wrap justify-between gap-4 pb-12">
+  {prev && (
+    <div class="inline-flex flex-col">
+      <p class="font-medium text-gray-500">⬅ Previous</p>
+      <a
+        class="p-4 border-[0.25rem] border-blue-600 rounded-lg opacity-75 transition-colors duration-500 hover:no-underline hover:opacity-100 hover:text-[crimson] hover:border-[crimson]"
+        href={`/${prev.slug}`}
+      >
+        {prev.title.rendered.slice(9)}
+      </a>
+    </div>
+  )}
+  {next && (
+    <div class="inline-flex flex-col ml-auto text-right">
+      <p class="font-medium text-gray-500">Next ➡</p>
+      <a
+        class="p-4 border-[0.25rem] border-blue-600 rounded-lg opacity-75 transition-colors duration-500 hover:no-underline hover:opacity-100 hover:text-[crimson] hover:border-[crimson]"
+        href={`/${next.slug}`}
+      >
+        {next.title.rendered.slice(9)}
+      </a>
+    </div>
+  )}
+</div>

@@ -40,18 +40,41 @@ window.onMount = () => {
   scan();
 };
 
+const store = [];
+const strongs = document.querySelectorAll(".content strong");
 const stars = document.querySelectorAll(".star");
 
-stars.forEach((star) => {
-  setInterval(() => {
-    const top = Math.random() * 100;
-    const left = Math.random() * 100;
-    const length = Math.random() / 2 + 0.25;
-    const deg = Math.random() * 360;
-    const scale = Math.random() / 2 + 1;
-
-    const style = `top: ${top}%; left: ${left}%; width: ${length}rem; height: ${length}rem; transform: rotate(${deg}deg) scale(${scale})`;
-
-    star.setAttribute("style", style);
-  }, Math.random() * 500 + 500);
+const strongObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    [...entry.target.children]
+      .filter((node) => node.nodeName === "svg")
+      .forEach((star, i) => {
+        const id = [...strongs].indexOf(entry.target) * 10 + i;
+        entry.isIntersecting
+          ? (store[id] = setInterval(() => {
+              const top = Math.random() * 100 - 25;
+              const left = Math.random() * 100;
+              const length = Math.random() / 1.3 + 0.25;
+              const deg = Math.random() * 360;
+              const scale = Math.random() / 2 + 1;
+              const style = `top: ${top}%; left: ${left}%; width: ${length}rem; height: ${length}rem; transform: rotate(${deg}deg) scale(${scale})`;
+              star.setAttribute("style", style);
+            }, Math.random() * 200 + 300))
+          : clearInterval(store[id]);
+      });
+  });
 });
+
+strongs.forEach((strong) => {
+  strongObserver.observe(strong);
+});
+
+const postComment = (e, name, comment) => {
+  e.preventDefault();
+  console.log(
+    JSON.stringify({
+      name,
+      comment,
+    })
+  );
+};

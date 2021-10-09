@@ -1,11 +1,22 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-global.authorData = global.authorData ? global.authorData : await (
+const author = global.authorData = global.authorData ? global.authorData : await (
   await fetch("https://wp.softhardsystem.com/wp-json/wp/v2/users/1")
 ).json();
 ---
 
 <Layout title="About">
-    <h1>About me!</h1>
+  <div class="p-6">
+    <figure class="mx-auto">
+      <img
+        class="rounded-full"
+        src={author.avatar_urls["24"].replace("s=24", "s=500")}
+        alt={author.name}
+      />
+      <figcaption>{author.name}</figcaption>
+    </figure>
+    <h1 class="pacific text-center">Hi, I'm {author.name}!</h1>
+    <p class="w-2/4 mx-auto text-center md:w-auto">{author.description}</p>
+  </div>
 </Layout>

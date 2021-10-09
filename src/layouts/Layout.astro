@@ -5,10 +5,9 @@ import { minify } from "terser";
 import HeadComponent from "./HeadComponent.astro";
 import Header from "./Header.astro";
 import Footer from "./Footer.astro";
+import Time from "../components/Time.astro";
 
-let { title, content } = Astro.props;
-
-title = title ? title : content.title;
+let { title, post } = Astro.props;
 
 const script = fs.readFileSync("script.js", "utf-8");
 
@@ -17,14 +16,31 @@ const { code } = await minify(script);
 
 <!DOCTYPE html>
 <html lang="en">
-<HeadComponent title={title}/>
-<body class="bg-yellow-50">
+  <HeadComponent title={title} />
+  <body class="bg-yellow-50">
     <Header />
-    <main id="root" class="max-w-[1200px] mx-auto">
+    <main id="root">
+      {
+        Astro.request.params.slug ? (
+            <div class="bg-blue-200 px-16 py-8">
+              <h1 class="pacific !text-red-700">{title}</h1>
+              <div class="text-lg text-gray-700 italic">
+                By {post._embedded.author[0].name + " • "}
+                <Time time={post.modified} />
+              </div>
+            </div>
+        ) : (
+            <svg class="w-screen" viewBox="0 0 976 56.4">
+            <path d="M976 42C544 87 380 6 0 55L1 0h975Z" fill="#bfdbfe" />
+            </svg>
+        )
+      }
+      <div class="max-w-[1200px] mx-auto">
         <slot></slot>
+      </div>
     </main>
     <Footer />
     <Spa containerSelector="#root" />
     {`<script>${code}</script>`}
-</body>
+  </body>
 </html>

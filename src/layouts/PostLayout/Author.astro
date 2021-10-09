@@ -6,7 +6,7 @@ const { author } = Astro.props;
 const avatar = author.avatar_urls["24"].replace("s=24", "s=150");
 ---
 
-<div class="author flex items-center">
+<div class="author flex md:flex-col items-center">
   <img class="rounded-full p-4" src={avatar} alt={`${author.name} | Soft Hard System`} />
   <div class="p-4">
     <h2>{author.name}</h2>

@@ -1,5 +1,7 @@
 ---
 import Layout from "./Layout.astro";
+import Time from "../components/Time.astro";
+import Taxonomy from "../components/Taxonomy.astro";
 import Pushable from "../components/Pushable.astro";
 import fetchWPData from "../data/data.js";
 
@@ -14,7 +16,7 @@ const category = posts.filter((post) =>
 
 <Layout title={`Category ${name}`}>
   <div class="max-w-2xl p-6 mx-auto">
-    <h1 class="flex flex-col items-center gap-2">
+    <h1 class="pacific flex flex-col items-center gap-2">
       {name}
       <small>{category.length} Articles Found</small>
     </h1>
@@ -22,12 +24,6 @@ const category = posts.filter((post) =>
       {category.map((post) => {
         const { title, slug, modified, uagb_excerpt } = post;
         const { source_url, alt_text } = post._embedded["wp:featuredmedia"][0];
-
-        const dateString =
-          "`${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`";
-
-        const dateArray = new Date(`${modified}Z`).toDateString().split(" ");
-        const date = `${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`;
         return (
           <section>
             <a href={`/${slug}`}>
@@ -35,45 +31,17 @@ const category = posts.filter((post) =>
             </a>
 
             <h2>
-              <a href={`/${slug}`}>{title.rendered}</a>
+              <a href={`/${slug}`}>{title.rendered.slice(9)}</a>
             </h2>
 
             <p>{uagb_excerpt.slice(0, -8)}</p>
 
             <div class="flex flex-wrap justify-between items-center gap-2 py-4">
-              <span class="inline-block">
-                Last Updated : &nbsp;
-                <time dateTime={`${modified}Z`}>
-                  {`<script>
-                    (() => {
-                      const dateArray = new Date("${modified}Z").toDateString().split(" ");
-                      document.currentScript.parentElement.textContent = ${dateString};
-                    })();
-                  </script>`}
-                  <noscript>{date}</noscript>
-                </time>
-              </span>
-
-              <span class="inline-block">
-                Categorized as :{" "}
-                {post._embedded["wp:term"][0].map((cat, i) => (
-                  <a href={`/category/${cat.slug}`}>
-                    {cat.name}
-                    {i === post._embedded["wp:term"][0].length - 1 ? "" : ", "}
-                  </a>
-                ))}
-              </span>
-
-              <span class="inline-block">
-                Tagged :{" "}
-                {post._embedded["wp:term"][1].map((tag, i) => (
-                  <a href={`/tag/${tag.slug}`}>
-                    {tag.name}
-                    {i === post._embedded["wp:term"][1].length - 1 ? "" : ", "}
-                  </a>
-                ))}
-              </span>
+              <Time time={modified} />
+              <Taxonomy term="category" array={post._embedded["wp:term"][0]} />
+              <Taxonomy term="tag" array={post._embedded["wp:term"][1]} />
             </div>
+            
             <Pushable slug={slug} />
           </section>
         );
