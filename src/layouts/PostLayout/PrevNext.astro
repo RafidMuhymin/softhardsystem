@@ -10,7 +10,7 @@ const { prev, next } = Astro.props.data;
         class="p-4 border-[0.25rem] border-blue-600 rounded-lg opacity-75 transition-colors duration-500 hover:no-underline hover:opacity-100 hover:text-[crimson] hover:border-[crimson]"
         href={`/${prev.slug}`}
       >
-        {prev.title.rendered.slice(9)}
+        {prev.title.rendered}
       </a>
     </div>
   )}
@@ -21,7 +21,7 @@ const { prev, next } = Astro.props.data;
         class="p-4 border-[0.25rem] border-blue-600 rounded-lg opacity-75 transition-colors duration-500 hover:no-underline hover:opacity-100 hover:text-[crimson] hover:border-[crimson]"
         href={`/${next.slug}`}
       >
-        {next.title.rendered.slice(9)}
+        {next.title.rendered}
       </a>
     </div>
   )}

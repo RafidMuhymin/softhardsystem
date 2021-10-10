@@ -1,5 +1,5 @@
 ---
-const { time } = Astro.props;
+const { time, modified } = Astro.props;
 const dateString = "`${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`";
 const dateArray = new Date(`${time}Z`).toDateString().split(" ");
 const date = `${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`;
@@ -8,7 +8,7 @@ const date = `${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`
 
 
 <span class="inline-block">
-  Last Updated :{" "}
+  {`${modified ? "Last Updated" : "Published"} : `}
   <time dateTime={`${time}Z`}>
     {`<script>
     (() => {

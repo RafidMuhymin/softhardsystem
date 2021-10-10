@@ -1,8 +1,4 @@
-const menubar = document.getElementById("menubar");
-
-menubar.onclick = () => {
-  const checkbox = document.getElementById("checkbox");
-
+document.getElementById("menubar").onclick = () => {
   const form = document.querySelector("#header > div form");
   const navlinks = document.querySelectorAll("#header > div nav a");
 
@@ -42,7 +38,21 @@ window.onMount = () => {
 
 const store = [];
 const strongs = document.querySelectorAll(".content strong");
-const stars = document.querySelectorAll(".star");
+
+strongs.forEach((strong) => {
+  Array.from({ length: 4 }).forEach(() => {
+    const top = Math.random() * 100 - 25;
+    const left = Math.random() * 125 - 25;
+    const length = Math.random() / 1.3 + 0.25;
+    strong.innerHTML += `<svg
+          viewbox="0 0 143 137"
+          class="star absolute transition-all duration-500"
+          style="top: ${top}%; left: ${left}%; width: ${length}rem; height: ${length}rem;"
+          >
+          <path d="m55 54-6 41-8-40-41-6 41-8 5-41 8 41 41 5Z" fill="#fc0"/>
+      </svg>`;
+  });
+});
 
 const strongObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry, i) => {
@@ -53,7 +63,7 @@ const strongObserver = new IntersectionObserver((entries) => {
         entry.isIntersecting
           ? (store[id] = setInterval(() => {
               const top = Math.random() * 100 - 25;
-              const left = Math.random() * 100;
+              const left = Math.random() * 125 - 25;
               const length = Math.random() / 1.3 + 0.25;
               const deg = Math.random() * 360;
               const scale = Math.random() / 2 + 1;
