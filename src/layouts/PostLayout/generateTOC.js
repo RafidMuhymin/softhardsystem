@@ -3,6 +3,13 @@ export default function (document) {
   let level = 0;
   let headingNumber = 0;
 
+  const htmlArray = [];
+
+  document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((heading, i) => {
+    htmlArray[i] = heading.innerHTML;
+    heading.innerHTML = heading.textContent;
+  });
+
   document.body.innerHTML = document.body.innerHTML.replace(
     /<h([\d])>([^<]+)<\/h([\d])>/gi,
     (str, openLevel, titleText, closeLevel) => {
@@ -27,5 +34,19 @@ export default function (document) {
     TOC += new Array(level + 1).join("</ul>");
   }
 
-  return TOC;
+  document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((heading, i) => {
+    heading.innerHTML = htmlArray[i];
+  });
+
+  const toc = document.createElement("div");
+  toc.innerHTML = TOC;
+
+  while (
+    [...toc.firstChild.children].length === 1 &&
+    toc.firstChild.firstChild.nodeName === "UL"
+  ) {
+    toc.innerHTML = toc.firstChild.innerHTML;
+  }
+
+  return toc.innerHTML;
 }

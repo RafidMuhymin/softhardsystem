@@ -3,6 +3,7 @@
 }
 
 .logo {
+  @apply p-2 text-2xl font-semibold whitespace-nowrap select-none hover:no-underline;
   background-image: linear-gradient(#006969, #006969);
   background-position: center 100%;
   background-repeat: no-repeat;
@@ -174,4 +175,8 @@ figcaption {
   100% {
     left: -0.25rem;
   }
+}
+
+.sidebar a {
+  @apply inline-block p-1;
 }

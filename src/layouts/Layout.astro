@@ -22,7 +22,7 @@ const { code } = await minify(script);
     <main id="root">
       {
         Astro.request.params.slug ? (
-            <div class="bg-blue-200 px-16 py-8">
+            <div class="bg-gradient-to-b from-blue-200 to-[#b9daff] px-16 py-8">
               <h1 class="pacific !text-red-700">{title}</h1>
               <div class="text-lg text-gray-700 italic">
                 By {post._embedded.author[0].name + " • "}

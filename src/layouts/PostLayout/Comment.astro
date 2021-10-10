@@ -1,12 +1,21 @@
 <div class="comment">
   <h2>Leave a comment</h2>
-  <form onsubmit="postComment(event, name.value, comment.value)" class="flex flex-col">
+  <form onsubmit="postComment(event)" class="flex flex-col">
     <label class="flex flex-col"
       ><h3>Name</h3>
       <input
         type="text"
         class="p-2 border-[0.25rem] border-gray-700"
         name="name"
+        required
+      />
+    </label>
+    <label class="flex flex-col"
+      ><h3>Email Address</h3>
+      <input
+        type="text"
+        class="p-2 border-[0.25rem] border-gray-700"
+        name="email"
         required
       />
     </label>
