@@ -18,7 +18,18 @@ const { document } = new JSDOM(post.content.rendered).window;
 
 const TOC = generateTOC(document);
 ---
+  
 <Layout title={title} post={post}>
+  <div
+    slot="wave"
+    class="bg-gradient-to-b from-blue-200 to-[#b9daff] px-16 py-8"
+  >
+    <h1 class="pacific !text-red-700">{title}</h1>
+    <div class="text-lg text-gray-700 italic">
+      By {post._embedded.author[0].name + " • "}
+      <Time time={post.modified} />
+    </div>
+  </div>
   <div class="flex md:flex-col">
     <section class="content flex flex-col gap-6 w-2/3 md:w-full p-8">
       <div>

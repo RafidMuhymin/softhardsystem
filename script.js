@@ -84,7 +84,7 @@ const twinkle = () => {
 
 twinkle();
 
-const postComment = async (e) => {
+commentbox.onsubmit = async (e) => {
   const { target: form } = e;
   e.preventDefault();
 

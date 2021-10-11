@@ -20,23 +20,16 @@ const { code } = await minify(script);
   <body class="bg-yellow-50">
     <Header />
     <main id="root">
-      {
-        Astro.request.params.slug ? (
-            <div class="bg-gradient-to-b from-blue-200 to-[#b9daff] px-16 py-8">
-              <h1 class="pacific !text-red-700">{title}</h1>
-              <div class="text-lg text-gray-700 italic">
-                By {post._embedded.author[0].name + " • "}
-                <Time time={post.modified} />
-              </div>
-            </div>
-        ) : (
-            <svg viewBox="0 0 976 56.4">
-              <path d="M976 42C544 87 380 6 0 55L1 0h975Z" fill="#bfdbfe" />
-            </svg>
-        )
-      }
+      {Astro.request.params.slug ? (
+        ""
+      ) : (
+        <svg viewBox="0 0 976 56.4">
+          <path d="M976 42C544 87 380 6 0 55L1 0h975Z" fill="#bfdbfe" />
+        </svg>
+      )}
+      <slot name="wave" />
       <div class="max-w-[1200px] mx-auto">
-        <slot></slot>
+        <slot />
       </div>
     </main>
     <Footer />
