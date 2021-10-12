@@ -1,17 +1,10 @@
 ---
-import fs from "node:fs";
 import { Spa } from "astro-spa";
-import { minify } from "terser";
 import HeadComponent from "./HeadComponent.astro";
 import Header from "./Header.astro";
 import Footer from "./Footer.astro";
-import Time from "../components/Time.astro";
 
-let { title, post } = Astro.props;
-
-const script = fs.readFileSync("script.js", "utf-8");
-
-const { code } = await minify(script);
+let { title } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -34,6 +27,7 @@ const { code } = await minify(script);
     </main>
     <Footer />
     <Spa containerSelector="#root" />
-    {`<script>${code}</script>`}
+    <script src={Astro.resolve("../scripts/layout.js")}></script>
+    <slot name="script" />
   </body>
 </html>

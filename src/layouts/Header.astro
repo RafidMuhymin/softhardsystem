@@ -6,8 +6,7 @@
   class="
     flex flex-wrap
     items-center
-    px-12
-    pt-8
+    gap-4 px-0 pt-8
     max-w-[1200px]
     mx-auto
     xl:px-10 xl:justify-center
@@ -15,7 +14,7 @@
   "
 >
   <div class="md:flex items-center justify-between md:w-full">
-    <a href="/" class="logo pacific !text-[#006a6a]"
+    <a href="/" class="logo pacific"
       >Soft Hard System</a
     >
     <button id="menubar" class="hidden md:inline-block text-[0rem]">
@@ -24,11 +23,10 @@
       <div class="w-6 h-1 m-2 bg-black transition-all duration-1000"></div>
     </button>
   </div>
+
   <nav
     class="
-      flex flex-grow
-      xl:flex-grow-0
-      md:flex-grow md:flex-col
+      flex flex-grow md:flex-col
       justify-evenly
       md:text-center
     "
@@ -39,6 +37,7 @@
     <a href="/topic/system">System</a>
     <a href="/off-topic">Off Topic</a>
   </nav>
+
   <form
     class="
       m-2
@@ -50,6 +49,7 @@
     onsubmit="event.preventDefault();navigate('search?query=' + query.value)"
   >
     <input
+      style="box-shadow: 10px 10px 20px #97b6df;"
       type="text"
       placeholder="Search …"
       name="query"
@@ -60,7 +60,7 @@
       class="
         bg-transparent
         absolute
-        right-1
+        right-2
         top-2/4
         -translate-y-2/4
         opacity-70

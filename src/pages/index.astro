@@ -17,9 +17,9 @@ const posts = await fetchWPData();
           const excerpt = post.uagb_excerpt.slice(0, -8);
           return (
             <div class="post-excerpt">
-              <h4><a href={`/${slug}`}>
-                {title}
-              </a></h4>
+              <h4>
+                <a href={`/${slug}`}>{title}</a>
+              </h4>
               <p>{excerpt}</p>
               <Pushable slug={slug} />
             </div>
@@ -28,14 +28,16 @@ const posts = await fetchWPData();
       </div>
     </section>
     <section class="pops w-1/3 md:w-full">
-      <h3 class="pacific text-center">Most Viewed</h3>
+      <h3 class="pacific text-center">Popular Articles</h3>
       {posts.map((post) => {
-          const title = post.title.rendered;
-          const { slug } = post;
-          return (
-            <h4 class="flex items-center"><span class="text-blue-600 p-4">➜</span> <a href={slug}>{title}</a></h4>
-          );
-        })}
+        const title = post.title.rendered;
+        const { slug } = post;
+        return (
+          <h4 class="flex items-center">
+            <span class="text-blue-600 p-4">➜</span> <a href={slug}>{title}</a>
+          </h4>
+        );
+      })}
     </section>
   </div>
 </Layout>

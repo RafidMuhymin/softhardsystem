@@ -1,1 +1,0 @@
-Fetched WP Images are stored in this folder
