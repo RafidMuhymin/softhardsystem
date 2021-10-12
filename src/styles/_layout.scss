@@ -119,32 +119,36 @@ figcaption {
   }
 }
 
-.pushable {
-  .shadow,
-  .front {
-    will-change: transform;
-  }
-
-  .edge {
-    background: linear-gradient(
-      to left,
-      theme("colors.blue.900") 0%,
-      theme("colors.blue.700") 8%,
-      theme("colors.blue.700") 92%,
-      theme("colors.blue.900") 100%
-    );
-  }
-
-  &:focus:not(:focus-visible) {
-    outline: none;
-  }
-}
-
 .content {
-  > div:not(.comment) {
+  > div:not(.comments) {
     @apply border-b-[0.25rem] border-gray-700;
   }
-  .comment {
+  .comments {
+    .spinner {
+      border-top: 0.75rem solid #66f;
+      animation: spin 1s linear infinite;
+    }
+    .comment {
+      @apply flex;
+      figure {
+        @apply p-4 flex justify-center items-center;
+      }
+      > div {
+        @apply flex flex-col gap-2 flex-grow;
+        cite {
+          @apply font-medium text-lg;
+          font-style: normal;
+        }
+        p {
+          @apply my-2;
+        }
+        button {
+          @apply w-max py-3 px-4 bg-blue-600 text-white;
+        }
+      }
+    }
+  }
+  .comment-form {
     h2,
     h3,
     button {
@@ -166,6 +170,10 @@ figcaption {
   }
 }
 
+.sidebar a {
+  @apply inline-block p-1;
+}
+
 @keyframes ltr {
   0% {
     left: -0.25rem;
@@ -178,6 +186,11 @@ figcaption {
   }
 }
 
-.sidebar a {
-  @apply inline-block p-1;
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

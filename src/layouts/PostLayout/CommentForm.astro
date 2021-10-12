@@ -1,7 +1,8 @@
-<div class="comment">
+<div class="comment-form py-4">
   <h2>Leave a comment</h2>
   <form id="commentbox" class="flex flex-col">
-    <label class="flex flex-col"
+<div class="grid grid-cols-2 gap-4">
+      <label class="flex flex-col"
       ><h3>Name</h3>
       <input
         type="text"
@@ -19,13 +20,22 @@
         required
       />
     </label>
+</div>
+      <label class="flex flex-col"
+      ><h3>Website URL (Optional)</h3>
+      <input
+        type="url"
+        class="p-2 border-[0.25rem] border-gray-700"
+        name="siteurl"
+      />
+    </label>
     <label class="flex flex-col"
       ><h3>Comment</h3>
       <textarea
         class="p-2 border-[0.25rem] border-gray-700"
         name="comment"
         cols="30"
-        rows="10"
+        rows="8"
         required
       ></textarea>
     </label>
