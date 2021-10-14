@@ -56,7 +56,7 @@
       if (entry.isIntersecting) {
         window[`${location.pathname}-comments`] ??= await (
           await fetch(
-            `https://wp.softhardsystem.com/wp-json/wp/v2/comments?post=${
+            `https://wp.softhardsystem.com/wp-json/wp/v2/comments?page=1&parent=0&post=${
               document.querySelector("article").id
             }`
           )
@@ -64,52 +64,72 @@
 
         console.log(window[`${location.pathname}-comments`]);
 
+        const createComment = async ({
+          id,
+          author_avatar_urls,
+          author_name,
+          author_url,
+          date,
+          content,
+          _links,
+        }) => {
+          return `<div id="${id}" class="comment">
+          <div>
+            <figure>
+              <img width="96" height="96" src="${
+                author_avatar_urls["96"]
+              }" alt="${author_name}" />
+            </figure>
+            <div>
+              <time dateTime="${date}Z">
+                  ${(() => {
+                    const dateArray = new Date(`${date}Z`)
+                      .toDateString()
+                      .split(" ");
+                    return `${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`;
+                  })()}
+              </time>
+
+              <cite>${
+                author_url
+                  ? `<a href="${author_url}">${author_name}</a>`
+                  : author_name
+              } wrote ➜</cite>
+
+              ${content.rendered}
+
+              <button class="pushable">
+                <span class="shadow"></span>
+                <span class="edge"></span>
+                <span class="front">Leave a Reply ➜</span>
+              </button>
+            </div>
+          </div>
+          ${
+            _links.children
+              ? (
+                  await Promise.all(
+                    (
+                      await (await fetch(_links.children[0].href)).json()
+                    ).map(async (reply) => await createComment(reply))
+                  )
+                ).join("")
+              : ""
+          }
+        </div>`;
+        };
+
         if (
           window[`${location.pathname}-comments`] &&
           window[`${location.pathname}-comments`].length > 0
         ) {
-          let html = "";
-          window[`${location.pathname}-comments`].forEach(
-            ({
-              id,
-              author_avatar_urls,
-              author_name,
-              author_url,
-              date,
-              content,
-            }) => {
-              html += `<div id="${id}" class="comment">
-              <figure>
-                <img width="96" height="96" src="${
-                  author_avatar_urls["96"]
-                }" alt="${author_name}" />
-              </figure>
-              <div>
-                <cite>${
-                  author_url
-                    ? `<a href="${author_url}">${author_name}</a>`
-                    : author_name
-                }</cite>
-                <time dateTime="${date}Z">
-                    ${(() => {
-                      const dateArray = new Date(`${date}Z`)
-                        .toDateString()
-                        .split(" ");
-                      return `${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`;
-                    })()}
-                </time>
-                ${content.rendered}
-                <button class="pushable">
-                  <span class="shadow"></span>
-                  <span class="edge"></span>
-                  <span class="front">Reply ➜</span>
-                </button>
-              </div>
-            </div>`;
-            }
-          );
-          document.querySelector(".comments").innerHTML = html;
-          commentObserver.disconnect();
+          document.querySelector(".comments").innerHTML = `${(
+            await Promise.all(
+              window[`${location.pathname}-comments`].map(
+                async (comment) => await createComment(comment)
+              )
+            )
+          ).join("")}`;
         }
       }
     });
@@ -124,7 +144,11 @@
     e.preventDefault();
 
     const res = await fetch(
-      `https://wp.softhardsystem.com/wp-json/wp/v2/comments?post=6&content=${form.comment.value}&author_name=${form.name.value}&author_email=${form.email.value}&author_url=${form.siteurl.value}`,
+      `https://wp.softhardsystem.com/wp-json/wp/v2/comments?post=${
+        document.querySelector("article").id
+      }&content=${form.comment.value}&author_name=${
+        form.name.value
+      }&author_email=${form.email.value}&author_url=${form.siteurl.value}`,
       {
         method: "POST",
       }

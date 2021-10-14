@@ -3,8 +3,13 @@ import { Spa } from "astro-spa";
 import HeadComponent from "./HeadComponent.astro";
 import Header from "./Header.astro";
 import Footer from "./Footer.astro";
+import { minify } from "terser";
+import fs from "node:fs";
 
-let { title } = Astro.props;
+const { title } = Astro.props;
+
+const script = fs.readFileSync("src/scripts/layout.js", "utf-8");
+const { code } = await minify(script);
 ---
 
 <!DOCTYPE html>
@@ -27,6 +32,6 @@ let { title } = Astro.props;
     </main>
     <Footer />
     <Spa containerSelector="#root" />
-    <script src={Astro.resolve("../scripts/layout.js")}></script>
+    {`<script>${code}</script>`}
   </body>
 </html>

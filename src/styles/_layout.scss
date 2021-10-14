@@ -70,6 +70,10 @@
   }
 }
 
+pre {
+  @apply w-full overflow-x-auto;
+}
+
 time {
   font-weight: bold;
 }
@@ -129,21 +133,35 @@ figcaption {
       animation: spin 1s linear infinite;
     }
     .comment {
-      @apply flex;
-      figure {
-        @apply p-4 flex justify-center items-center;
+      &:not(:last-child) {
+        @apply border-blue-400 border-b-[0.25rem];
       }
-      > div {
-        @apply flex flex-col gap-2 flex-grow;
-        cite {
-          @apply font-medium text-lg;
-          font-style: normal;
+      .comment {
+        @apply border-0 ml-auto w-[95%];
+        > div:first-child {
+          > div {
+            @apply scale-95 ml-auto;
+          }
         }
-        p {
-          @apply my-2;
+      }
+      > div:first-child {
+        @apply pb-4 flex;
+        figure {
+          @apply p-2 w-1/6 flex justify-center items-center;
+          > img {
+            @apply rounded-full;
+          }
         }
-        button {
-          @apply w-max py-3 px-4 bg-blue-600 text-white;
+        > div {
+          @apply w-5/6 flex flex-col p-4 gap-2;
+          cite {
+            @apply font-semibold text-xl;
+          }
+          p {
+            @apply mt-2 italic;
+          }
+          button {
+          }
         }
       }
     }
