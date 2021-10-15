@@ -1,27 +1,27 @@
-<div class="comment-form py-4">
+<div class="comment-section py-4">
   <h2>Leave a comment</h2>
-  <form id="commentbox" class="flex flex-col">
-<div class="grid grid-cols-2 gap-4">
+  <form class="comment-form flex flex-col">
+    <div class="grid grid-cols-2 gap-4">
+      <label class="self-end flex flex-col"
+        ><h3>Name</h3>
+        <input
+          type="text"
+          class="p-2 border-[0.25rem] border-gray-700"
+          name="name"
+          required
+        />
+      </label>
       <label class="flex flex-col"
-      ><h3>Name</h3>
-      <input
-        type="text"
-        class="p-2 border-[0.25rem] border-gray-700"
-        name="name"
-        required
-      />
-    </label>
+        ><h3>Email Address</h3>
+        <input
+          type="email"
+          class="p-2 border-[0.25rem] border-gray-700"
+          name="email"
+          required
+        />
+      </label>
+    </div>
     <label class="flex flex-col"
-      ><h3>Email Address</h3>
-      <input
-        type="email"
-        class="p-2 border-[0.25rem] border-gray-700"
-        name="email"
-        required
-      />
-    </label>
-</div>
-      <label class="flex flex-col"
       ><h3>Website URL (Optional)</h3>
       <input
         type="url"
@@ -46,7 +46,7 @@
         px-12
         w-auto
         mx-auto
-        inline-block
+        block
         font-medium
         transition-colors
         text-white
@@ -55,7 +55,7 @@
         hover:text-gray-700 hover:bg-transparent
       "
     >
-      Post Comment
+     Post Comment
     </button>
   </form>
 </div>

@@ -147,7 +147,7 @@ figcaption {
       > div:first-child {
         @apply pb-4 flex;
         figure {
-          @apply p-2 w-1/6 flex justify-center items-center;
+          @apply p-[1%] w-1/6 flex justify-center items-center;
           > img {
             @apply rounded-full;
           }
@@ -171,6 +171,26 @@ figcaption {
     h3,
     button {
       @apply my-4;
+      + p {
+        @apply text-center text-red-700 font-medium;
+        &.hold {
+          @apply text-yellow-700;
+        }
+        &.approved {
+          @apply text-green-700;
+        }
+      }
+      > div {
+        @apply w-6 h-6 rounded-full border-[0.15rem] border-white;
+        border-top: 0.15rem solid theme("colors.gray.700");
+        animation: spin 1s linear infinite;
+      }
+      &:hover {
+        > div {
+          @apply border-gray-700;
+          border-top: 0.15rem solid #fff;
+        }
+      }
     }
     input:focus,
     textarea:focus {
@@ -179,6 +199,13 @@ figcaption {
     }
   }
 }
+
+// #reply-form {
+//   @apply border-b-[0.25rem] border-gray-700;
+//   p {
+//     @apply border-b-[0.25rem] border-gray-700;
+//   }
+// }
 
 .pops {
   span {

@@ -54,13 +54,17 @@
   const commentObserver = new IntersectionObserver((entries) => {
     entries.forEach(async (entry) => {
       if (entry.isIntersecting) {
-        window[`${location.pathname}-comments`] ??= await (
-          await fetch(
+        commentObserver.disconnect();
+        window[`${location.pathname}-comments`] ??= await (async () => {
+          const response = await fetch(
             `https://wp.softhardsystem.com/wp-json/wp/v2/comments?page=1&parent=0&post=${
               document.querySelector("article").id
             }`
-          )
-        ).json();
+          );
+          const count = response.headers.get("X-WP-TOTAL");
+          const comments = await response.json();
+          return { count, comments };
+        })();
 
         console.log(window[`${location.pathname}-comments`]);
 
@@ -98,7 +102,8 @@
 
               ${content.rendered}
 
-              <button class="pushable">
+              <button class="pushable";
+              })(event)">
                 <span class="shadow"></span>
                 <span class="edge"></span>
                 <span class="front">Leave a Reply ➜</span>
@@ -121,41 +126,104 @@
 
         if (
           window[`${location.pathname}-comments`] &&
-          window[`${location.pathname}-comments`].length > 0
+          window[`${location.pathname}-comments`].comments.length > 0
         ) {
-          document.querySelector(".comments").innerHTML = `${(
+          const comments = document.querySelector(".comments");
+          const previousHTML = comments.innerHTML;
+          comments.innerHTML = `${(
             await Promise.all(
-              window[`${location.pathname}-comments`].map(
+              window[`${location.pathname}-comments`].comments.map(
                 async (comment) => await createComment(comment)
               )
             )
           ).join("")}`;
+          comments.innerHTML !== previousHTML &&
+            document.querySelectorAll("button.pushable").forEach((btn) => {
+              btn.addEventListener("click", ({ path }) => {
+                document.getElementById("reply-form")?.remove();
+                const commentContainer = path[3].id ? path[2] : path[3];
+                const replyForm = document
+                  .querySelector(".comment-form")
+                  .cloneNode(true);
+                replyForm.id = "reply-form";
+                replyForm.querySelector("button").innerText = "Post Reply";
+                commentContainer.insertAdjacentHTML(
+                  "afterend",
+                  replyForm.outerHTML
+                );
+                const form = document.querySelector("#reply-form");
+                const input = form.querySelector(`input[name="name"]`);
+                input.scrollIntoView({ block: "center", behavior: "smooth" });
+                input.focus({ preventScroll: true });
+                form.onsubmit = (e) => {
+                  e.preventDefault();
+                  e.submitter.innerHTML = `<div></div>`;
+                  postComment(e.target);
+                };
+              });
+            });
         }
       }
     });
   });
 
-  document.querySelectorAll(".comment-form, .comments").forEach((element) => {
-    commentObserver.observe(element);
-  });
+  document
+    .querySelectorAll(".comment-section, .comments")
+    .forEach((element) => {
+      commentObserver.observe(element);
+    });
 
-  document.getElementById("commentbox").onsubmit = async (e) => {
-    const { target: form } = e;
+  document.querySelector(".comment-form").onsubmit = (e) => {
     e.preventDefault();
+    e.submitter.innerHTML = `<div></div>`;
+    postComment(e.target);
+  };
 
-    const res = await fetch(
+  const postComment = async (form) => {
+    const button = form.querySelector("button");
+    fetch(
       `https://wp.softhardsystem.com/wp-json/wp/v2/comments?post=${
         document.querySelector("article").id
       }&content=${form.comment.value}&author_name=${
         form.name.value
-      }&author_email=${form.email.value}&author_url=${form.siteurl.value}`,
+      }&author_email=${form.email.value}&author_url=${form.siteurl.value}${
+        form.id ? `parent=${form.parentElement.id}` : ""
+      }`,
       {
         method: "POST",
       }
-    ).catch(({ message }) => {
-      console.log(message);
-    });
-
-    console.log(await res.json());
+    )
+      .then(async (res) => {
+        const comment = await res.json();
+        console.log(comment);
+        const { status } = comment;
+        button.innerText = `Post ${form.id ? "Reply" : "Comment"}`;
+        button.insertAdjacentHTML(
+          "afterend",
+          `<p class="${status}">Your comment has been ${
+            status === "hold"
+              ? "sent for approval!"
+              : status === "trash"
+              ? "trashed!"
+              : status === "spam"
+              ? "marked as spam!"
+              : "approved! Reload to see the changes!"
+          }</p>`
+        );
+        setTimeout(() => {
+          button.nextElementSibling.remove();
+        }, 3000);
+      })
+      .catch(({ message }) => {
+        button.innerText = `Post ${form.id ? "Reply" : "Comment"}`;
+        console.log(message);
+        button.insertAdjacentHTML(
+          "afterend",
+          `<p class="error">${message}</p>`
+        );
+        setTimeout(() => {
+          button.nextElementSibling.remove();
+        }, 3000);
+      });
   };
 })();

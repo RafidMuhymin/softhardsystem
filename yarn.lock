@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@astrojs/compiler@^0.1.15":
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/@astrojs/compiler/-/compiler-0.1.15.tgz#3d67c1a6591834c76471bd99c3fe49c6173de7fc"
+  integrity sha512-o8vxpbM4k9oROUN4ylOzjvCX3+g7U9P9Uoemji8VkVP7W/USDhJy56cdDI+ADvb1RxiOlzAnoowoScCPXuHtYQ==
+  dependencies:
+    typescript "^4.3.5"
+
 "@astrojs/markdown-support@0.3.1":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@astrojs/markdown-support/-/markdown-support-0.3.1.tgz#e2efbcb3fc6df7f7d8bb32f431831312539052c5"
@@ -5978,6 +5985,11 @@ typedarray-to-buffer@^3.1.5:
   integrity sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==
   dependencies:
     is-typedarray "^1.0.0"
+
+typescript@^4.3.5:
+  version "4.4.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"
+  integrity sha512-DqGhF5IKoBl8WNf8C1gu8q0xZSInh9j1kJJMqT3a94w1JzVaBU4EXOSMrz9yDqMT0xt3selp83fuFMQ0uzv6qA==
 
 unherit@^1.0.4:
   version "1.1.3"
