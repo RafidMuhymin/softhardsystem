@@ -124,7 +124,7 @@ figcaption {
 }
 
 .content {
-  > div:not(.comments) {
+  > div {
     @apply border-b-[0.25rem] border-gray-700;
   }
   .comments {

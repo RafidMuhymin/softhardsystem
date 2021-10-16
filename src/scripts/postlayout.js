@@ -58,19 +58,22 @@
     entries.forEach(async (entry) => {
       if (entry.isIntersecting) {
         commentObserver.disconnect();
-        window[`${location.pathname}-comments`] ??= await (async () => {
-          const response = await fetch(
-            `https://wp.softhardsystem.com/wp-json/wp/v2/comments?page=1&post=${
-              document.querySelector("article").id
-            }`
-          );
-          const count = response.headers.get("X-WP-TOTAL");
-          console.log(response.headers);
-          const comments = await response.json();
+        const { count, comments } = await (async () => {
+          const { id } = document.querySelector("article");
+          const count = (
+            await fetch(
+              `https://wp.softhardsystem.com/wp-json/wp/v2/comments?per_page=1&post=${id}`
+            )
+          ).headers.get("X-WP-TOTAL");
+          const comments = await (
+            await fetch(
+              `https://wp.softhardsystem.com/wp-json/wp/v2/comments?parent=0&post=${id}`
+            )
+          ).json();
           return { count, comments };
         })();
 
-        console.log(window[`${location.pathname}-comments`]);
+        console.log({ count, comments });
 
         const createComment = async ({
           id,
@@ -108,8 +111,7 @@
 
               ${content.rendered}
 
-              <button class="pushable";
-              })(event)">
+              <button class="pushable">
                 <span class="shadow"></span>
                 <span class="edge"></span>
                 <span class="front">Leave a Reply ➜</span>
@@ -130,22 +132,40 @@
         </div>`;
         };
 
-        if (
-          window[`${location.pathname}-comments`] &&
-          window[`${location.pathname}-comments`].comments.length > 0
-        ) {
-          const comments = document.querySelector(".comments");
-          const { innerHTML: commentHTML } = comments;
-          comments.innerHTML = `${(
+        const focus = () => {
+          const input = document.querySelector(`input[name="name"]`);
+          input.scrollIntoView({ block: "center", behavior: "smooth" });
+          input.focus({ preventScroll: true });
+        };
+
+        if (comments) {
+          const commentsContainer = document.querySelector(".comments");
+          const { innerHTML: commentHTML } = commentsContainer;
+          commentsContainer.innerHTML = `<h3 align="center">${
+            count > 0 ? `${count} Replies` : "No one has commented yet"
+          } on <span class="pacific">${
+            document.querySelector("h1").textContent
+          }${count > 0 ? "" : "!"}</span>${
+            count > 0
+              ? ""
+              : " Don't miss the chance to be the first one to share a thought!"
+          }</h3>${
+            count > 0
+              ? ""
+              : `<button class='pushable focus'>
+                  <span class="shadow"></span>
+                  <span class="edge"></span>
+                  <span class="front">Focus on Comment Box ➜</span>
+                </button>`
+          }${(
             await Promise.all(
-              window[`${location.pathname}-comments`].comments.map(
-                async (comment) => await createComment(comment)
-              )
+              comments.map(async (comment) => await createComment(comment))
             )
           ).join("")}`;
-          comments.innerHTML !== commentHTML &&
+
+          commentsContainer.innerHTML !== commentHTML &&
             document.querySelectorAll("button.pushable").forEach((btn) => {
-              btn.addEventListener("click", ({ path }) => {
+              btn.onclick = ({ path }) => {
                 const authorName = (
                   path[3].id ? path[1] : path[2]
                 ).querySelector("cite span").textContent;
@@ -164,9 +184,7 @@
                 replySection = document.querySelector("#reply-section");
                 const cancelButton =
                   replySection.querySelector("button.cancel");
-                const input = replySection.querySelector(`input[name="name"]`);
-                input.scrollIntoView({ block: "center", behavior: "smooth" });
-                input.focus({ preventScroll: true });
+                focus();
                 replySection.onsubmit = (e) => {
                   e.preventDefault();
                   e.submitter.innerHTML = `<div></div>`;
@@ -175,8 +193,12 @@
                 cancelButton.onclick = () => {
                   replySection.replaceWith(commentSection);
                 };
-              });
+              };
             });
+
+          if (!(count > 0)) {
+            document.querySelector("button.focus").onclick = focus;
+          }
         }
       }
     });
