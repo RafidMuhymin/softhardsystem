@@ -168,9 +168,14 @@ figcaption {
   }
   .comment-form {
     h2,
-    h3,
-    button {
+    h3 {
       @apply my-4;
+    }
+    button {
+      @apply my-4 py-4 px-12 w-auto mx-auto font-medium transition-colors border-[0.25rem];
+      &.cancel {
+        @apply text-white bg-red-700 border-red-700 hover:text-red-700 hover:bg-transparent;
+      }
       + p {
         @apply text-center text-red-700 font-medium;
         &.hold {

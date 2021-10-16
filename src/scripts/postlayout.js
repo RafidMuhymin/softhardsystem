@@ -51,17 +51,21 @@
 
   twinkle();
 
+  const commentSection = document.querySelector(".comment-section");
+  const { innerHTML: commentSectionHTML } = commentSection;
+
   const commentObserver = new IntersectionObserver((entries) => {
     entries.forEach(async (entry) => {
       if (entry.isIntersecting) {
         commentObserver.disconnect();
         window[`${location.pathname}-comments`] ??= await (async () => {
           const response = await fetch(
-            `https://wp.softhardsystem.com/wp-json/wp/v2/comments?page=1&parent=0&post=${
+            `https://wp.softhardsystem.com/wp-json/wp/v2/comments?page=1&post=${
               document.querySelector("article").id
             }`
           );
           const count = response.headers.get("X-WP-TOTAL");
+          console.log(response.headers);
           const comments = await response.json();
           return { count, comments };
         })();
@@ -94,11 +98,13 @@
                   })()}
               </time>
 
-              <cite>${
-                author_url
-                  ? `<a href="${author_url}">${author_name}</a>`
-                  : author_name
-              } wrote ➜</cite>
+              <cite>
+                <span>${
+                  author_url
+                    ? `<a href="${author_url}">${author_name}</a>`
+                    : author_name
+                }</span>
+              wrote ➜</cite>
 
               ${content.rendered}
 
@@ -129,7 +135,7 @@
           window[`${location.pathname}-comments`].comments.length > 0
         ) {
           const comments = document.querySelector(".comments");
-          const previousHTML = comments.innerHTML;
+          const { innerHTML: commentHTML } = comments;
           comments.innerHTML = `${(
             await Promise.all(
               window[`${location.pathname}-comments`].comments.map(
@@ -137,28 +143,37 @@
               )
             )
           ).join("")}`;
-          comments.innerHTML !== previousHTML &&
+          comments.innerHTML !== commentHTML &&
             document.querySelectorAll("button.pushable").forEach((btn) => {
               btn.addEventListener("click", ({ path }) => {
-                document.getElementById("reply-form")?.remove();
-                const commentContainer = path[3].id ? path[2] : path[3];
-                const replyForm = document
-                  .querySelector(".comment-form")
-                  .cloneNode(true);
-                replyForm.id = "reply-form";
-                replyForm.querySelector("button").innerText = "Post Reply";
-                commentContainer.insertAdjacentHTML(
+                const authorName = (
+                  path[3].id ? path[1] : path[2]
+                ).querySelector("cite span").textContent;
+                let replySection = commentSection.cloneNode(true);
+                replySection.id = "reply-section";
+                replySection.querySelector(
+                  "h2"
+                ).outerHTML = `<h2 align="center">Reply to ${authorName}</h2>`;
+                const button = replySection.querySelector("button");
+                button.insertAdjacentHTML(
                   "afterend",
-                  replyForm.outerHTML
+                  `<button class="cancel">Cancel Reply</button>`
                 );
-                const form = document.querySelector("#reply-form");
-                const input = form.querySelector(`input[name="name"]`);
+                button.textContent = "Post Reply";
+                commentSection.replaceWith(replySection);
+                replySection = document.querySelector("#reply-section");
+                const cancelButton =
+                  replySection.querySelector("button.cancel");
+                const input = replySection.querySelector(`input[name="name"]`);
                 input.scrollIntoView({ block: "center", behavior: "smooth" });
                 input.focus({ preventScroll: true });
-                form.onsubmit = (e) => {
+                replySection.onsubmit = (e) => {
                   e.preventDefault();
                   e.submitter.innerHTML = `<div></div>`;
-                  postComment(e.target);
+                  postComment(e.target, path[3].id ? path[3].id : path[4].id);
+                };
+                cancelButton.onclick = () => {
+                  replySection.replaceWith(commentSection);
                 };
               });
             });
@@ -179,15 +194,14 @@
     postComment(e.target);
   };
 
-  const postComment = async (form) => {
-    const button = form.querySelector("button");
+  const postComment = async (form, parent) => {
     fetch(
       `https://wp.softhardsystem.com/wp-json/wp/v2/comments?post=${
         document.querySelector("article").id
       }&content=${form.comment.value}&author_name=${
         form.name.value
       }&author_email=${form.email.value}&author_url=${form.siteurl.value}${
-        form.id ? `parent=${form.parentElement.id}` : ""
+        parent ? `&parent=${parent}` : ""
       }`,
       {
         method: "POST",
@@ -196,33 +210,49 @@
       .then(async (res) => {
         const comment = await res.json();
         console.log(comment);
-        const { status } = comment;
-        button.innerText = `Post ${form.id ? "Reply" : "Comment"}`;
-        button.insertAdjacentHTML(
-          "afterend",
-          `<p class="${status}">Your comment has been ${
-            status === "hold"
-              ? "sent for approval!"
-              : status === "trash"
-              ? "trashed!"
-              : status === "spam"
-              ? "marked as spam!"
-              : "approved! Reload to see the changes!"
-          }</p>`
-        );
-        setTimeout(() => {
-          button.nextElementSibling.remove();
-        }, 3000);
+        const { status, message } = comment;
+        if (status) {
+          document.querySelector(".comment-section").innerHTML =
+            commentSectionHTML;
+          document
+            .querySelector(".comment-section button")
+            .insertAdjacentHTML(
+              "afterend",
+              `<p class="${status}">Your comment has been ${
+                status === "hold"
+                  ? "sent for approval!"
+                  : status === "trash"
+                  ? "trashed!"
+                  : status === "spam"
+                  ? "marked as spam!"
+                  : "approved! Reload to see the changes!"
+              }</p>`
+            );
+          setTimeout(() => {
+            document
+              .querySelector(".comment-section button")
+              .nextElementSibling.remove();
+          }, 3000);
+        } else {
+          form
+            .querySelector("button")
+            .insertAdjacentHTML("afterend", `<p class="error">${message}</p>`);
+          setTimeout(() => {
+            document
+              .querySelector(".comment-section button")
+              .nextElementSibling.remove();
+          }, 3000);
+        }
       })
       .catch(({ message }) => {
-        button.innerText = `Post ${form.id ? "Reply" : "Comment"}`;
         console.log(message);
-        button.insertAdjacentHTML(
-          "afterend",
-          `<p class="error">${message}</p>`
-        );
+        form
+          .querySelector("button")
+          .insertAdjacentHTML("afterend", `<p class="error">${message}</p>`);
         setTimeout(() => {
-          button.nextElementSibling.remove();
+          document
+            .querySelector(".comment-section button")
+            .nextElementSibling.remove();
         }, 3000);
       });
   };

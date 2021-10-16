@@ -21,8 +21,8 @@ const { document } = new JSDOM(post.content.rendered).window;
 
 const TOC = generateTOC(document);
 
-const script = fs.readFileSync("src/scripts/postlayout.js", "utf-8");
-const { code } = await minify(script);
+// const script = fs.readFileSync("src/scripts/postlayout.js", "utf-8");
+// const { code } = await minify(script);
 ---
 
 <Layout title={title}>
@@ -60,5 +60,6 @@ const { code } = await minify(script);
     </section>
   </div>
 
-  {`<script>${code}</script>`}  
+  <!-- {`<script>${code}</script>`}   -->
+  <script src={Astro.resolve("../../scripts/postlayout.js")}></script>
 </Layout>
