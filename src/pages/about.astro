@@ -11,7 +11,9 @@ const author = global.authorData = global.authorData ? global.authorData : await
     <figure class="mx-auto">
       <img
         class="rounded-full"
-        src={author.avatar_urls["24"].replace("s=24", "s=500")}
+        width="512"
+        height="512"
+        src={author.avatar_urls["24"].replace("s=24", "s=512")}
         alt={author.name}
       />
       <figcaption>{author.name}</figcaption>

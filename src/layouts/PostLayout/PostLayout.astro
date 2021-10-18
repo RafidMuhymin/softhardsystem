@@ -49,16 +49,20 @@ const TOC = generateTOC(document);
         </div>
       </div>
       <PrevNext data={prevNext} />
-      <Author author={post._embedded.author[0]} />
-      <CommentForm />
-      <Comments />
+
     </section>
-    <section class="sidebar w-1/3 md:w-full p-8">
+    <section class="sidebar md:min-h-0 min-h-screen sticky top-0 self-start w-1/3 md:w-full px-8 py-16">
       <h2 class="pacific toc">Table Of Contents</h2>
       {TOC}
       <Rocket />
     </section>
   </div>
+
+  <section class="non-content max-w-3xl mx-auto p-8 pt-0">
+    <Author author={post._embedded.author[0]} />
+    <CommentForm />
+    <Comments />
+  </section>
 
   <!-- {`<script>${code}</script>`}   -->
   <script src={Astro.resolve("../../scripts/postlayout.js")}></script>

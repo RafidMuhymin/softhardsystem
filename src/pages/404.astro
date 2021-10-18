@@ -48,14 +48,14 @@ const posts = await fetchWPData();
       />
     </form>
 
-    <section class="pops">
+    <section>
       <h3 class="pacific text-center my-12">Popular Articles</h3>
       {posts.map((post) => {
         const title = post.title.rendered;
         const { slug } = post;
         return (
           <h4 class="flex items-center">
-            <span class="text-blue-600 p-4">➜</span> <a href={slug}>{title}</a>
+            <a href={slug}>{title}</a>
           </h4>
         );
       })}

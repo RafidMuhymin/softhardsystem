@@ -1,9 +1,10 @@
 .pushable {
   @apply relative block max-w-max ml-auto duration-200;
-  &.focus {
+  &.focus,
+  &.load {
     @apply mx-auto;
     .front {
-      background-color: #ec143c;
+      background-color: #ea143c;
     }
     .edge {
       background: linear-gradient(

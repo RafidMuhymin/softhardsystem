@@ -53,27 +53,28 @@
 
   const commentSection = document.querySelector(".comment-section");
   const { innerHTML: commentSectionHTML } = commentSection;
+  const { id } = document.querySelector("article");
+  let maxComment = 10;
 
   const commentObserver = new IntersectionObserver((entries) => {
     entries.forEach(async (entry) => {
       if (entry.isIntersecting) {
         commentObserver.disconnect();
-        const { count, comments } = await (async () => {
-          const { id } = document.querySelector("article");
-          const count = (
+        const { replyCount, commentCount, comments } = await (async () => {
+          const replyCount = (
             await fetch(
               `https://wp.softhardsystem.com/wp-json/wp/v2/comments?per_page=1&post=${id}`
             )
           ).headers.get("X-WP-TOTAL");
-          const comments = await (
-            await fetch(
-              `https://wp.softhardsystem.com/wp-json/wp/v2/comments?parent=0&post=${id}`
-            )
-          ).json();
-          return { count, comments };
+          const response = await fetch(
+            `https://wp.softhardsystem.com/wp-json/wp/v2/comments?parent=0&post=${id}`
+          );
+          const commentCount = response.headers.get("X-WP-TOTAL");
+          const comments = await response.json();
+          return { replyCount, commentCount, comments };
         })();
 
-        console.log({ count, comments });
+        console.log({ count: replyCount, comments });
 
         const createComment = async ({
           id,
@@ -91,7 +92,7 @@
                 author_avatar_urls["96"]
               }" alt="${author_name}" />
             </figure>
-            <div>
+            <div class="comment-details">
               <time dateTime="${date}Z">
                   ${(() => {
                     const dateArray = new Date(`${date}Z`)
@@ -142,15 +143,17 @@
           const commentsContainer = document.querySelector(".comments");
           const { innerHTML: commentHTML } = commentsContainer;
           commentsContainer.innerHTML = `<h3 align="center">${
-            count > 0 ? `${count} Replies` : "No one has commented yet"
+            replyCount > 0
+              ? `${replyCount} Replies`
+              : "No one has commented yet"
           } on <span class="pacific">${
             document.querySelector("h1").textContent
-          }${count > 0 ? "" : "!"}</span>${
-            count > 0
+          }${replyCount > 0 ? "" : "!"}</span>${
+            replyCount > 0
               ? ""
               : " Don't miss the chance to be the first one to share a thought!"
           }</h3>${
-            count > 0
+            replyCount > 0
               ? ""
               : `<button class='pushable focus'>
                   <span class="shadow"></span>
@@ -161,7 +164,15 @@
             await Promise.all(
               comments.map(async (comment) => await createComment(comment))
             )
-          ).join("")}`;
+          ).join("")}${
+            replyCount > 10
+              ? `<button class='li-btn pushable load'>
+                  <span class="shadow"></span>
+                  <span class="edge"></span>
+                  <span class="front">Load More Comments ➜</span>
+                </button>`
+              : ""
+          }`;
 
           commentsContainer.innerHTML !== commentHTML &&
             document.querySelectorAll("button.pushable").forEach((btn) => {
@@ -187,8 +198,13 @@
                 focus();
                 replySection.onsubmit = (e) => {
                   e.preventDefault();
+                  const { innerHTML: buttonHTML } = e.submitter;
                   e.submitter.innerHTML = `<div></div>`;
-                  postComment(e.target, path[3].id ? path[3].id : path[4].id);
+                  postComment(
+                    e.target,
+                    buttonHTML,
+                    path[3].id ? path[3].id : path[4].id
+                  );
                 };
                 cancelButton.onclick = () => {
                   replySection.replaceWith(commentSection);
@@ -196,8 +212,33 @@
               };
             });
 
-          if (!(count > 0)) {
+          if (!(replyCount > 0)) {
             document.querySelector("button.focus").onclick = focus;
+          }
+          if (commentCount > 10) {
+            const button = document.querySelector("button.load");
+            button.onclick = async () => {
+              const { innerHTML: buttonHTML } = button;
+              button.querySelector(".front").innerHTML = "<div></div>";
+              await Promise.all(
+                (
+                  await (
+                    await fetch(
+                      `https://wp.softhardsystem.com/wp-json/wp/v2/comments?parent=0&post=${id}&page=${
+                        maxComment / 10 + 1
+                      }`
+                    )
+                  ).json()
+                ).map(async (comment) => await createComment(comment))
+              ).then((html) => {
+                html = html.join("");
+                maxComment += 10;
+                maxComment < commentCount
+                  ? (button.insertAdjacentHTML("beforebegin", html),
+                    (button.innerHTML = buttonHTML))
+                  : (button.outerHTML = html);
+              });
+            };
           }
         }
       }
@@ -212,19 +253,20 @@
 
   document.querySelector(".comment-form").onsubmit = (e) => {
     e.preventDefault();
+    const { innerHTML: buttonHTML } = e.submitter;
     e.submitter.innerHTML = `<div></div>`;
-    postComment(e.target);
+    postComment(e.target, buttonHTML);
   };
 
-  const postComment = async (form, parent) => {
+  const postComment = async (form, buttonHTML, parent) => {
     fetch(
       `https://wp.softhardsystem.com/wp-json/wp/v2/comments?post=${
         document.querySelector("article").id
-      }&content=${form.comment.value}&author_name=${
-        form.name.value
-      }&author_email=${form.email.value}&author_url=${form.siteurl.value}${
+      }&author_name=${form.name.value}&author_email=${
+        form.email.value
+      }&author_url=${form.siteurl.value}${
         parent ? `&parent=${parent}` : ""
-      }`,
+      }&content=${encodeURI(form.comment.value)}`,
       {
         method: "POST",
       }
@@ -256,9 +298,13 @@
               .nextElementSibling.remove();
           }, 3000);
         } else {
-          form
-            .querySelector("button")
-            .insertAdjacentHTML("afterend", `<p class="error">${message}</p>`);
+          const button = document.querySelector(".comment-form button");
+          document.querySelector(".comment-form").reset();
+          button.innerHTML = buttonHTML;
+          button.insertAdjacentHTML(
+            "afterend",
+            `<p class="error">${message}</p>`
+          );
           setTimeout(() => {
             document
               .querySelector(".comment-section button")
@@ -268,9 +314,13 @@
       })
       .catch(({ message }) => {
         console.log(message);
-        form
-          .querySelector("button")
-          .insertAdjacentHTML("afterend", `<p class="error">${message}</p>`);
+        const button = document.querySelector(".comment-form button");
+        document.querySelector(".comment-form").reset();
+        button.innerHTML = buttonHTML;
+        button.insertAdjacentHTML(
+          "afterend",
+          `<p class="error">${message}</p>`
+        );
         setTimeout(() => {
           document
             .querySelector(".comment-section button")

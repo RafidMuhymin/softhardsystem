@@ -41,9 +41,8 @@
 
 #header > div {
   nav {
-    a:not(.pacific) {
+    a {
       @apply inline-block text-gray-700 p-2 bg-no-repeat hover:no-underline md:hidden md:relative;
-      font-family: Pacifico, cursive;
       background-image: linear-gradient(
         theme("colors.gray.700"),
         theme("colors.gray.700")
@@ -123,94 +122,96 @@ figcaption {
   }
 }
 
-.content {
+.content,
+.non-content {
   > div {
     @apply border-b-[0.25rem] border-gray-700;
   }
-  .comments {
-    .spinner {
-      border-top: 0.75rem solid #66f;
+}
+
+.comments {
+  .spinner {
+    border-top: 0.75rem solid #66f;
+    animation: spin 1s linear infinite;
+  }
+  .load {
+    div {
+      @apply w-6 h-6 mx-4 rounded-full border-[0.15rem] border-white;
+      border-top-color: #ea143c;
       animation: spin 1s linear infinite;
     }
-    .comment {
-      &:not(:last-child) {
-        @apply border-blue-400 border-b-[0.25rem];
-      }
-      .comment {
-        @apply border-0 ml-auto w-[95%];
-        > div:first-child {
-          > div {
-            @apply scale-95 ml-auto;
-          }
-        }
-      }
-      > div:first-child {
-        @apply pb-4 flex;
-        figure {
-          @apply p-[1%] w-1/6 flex justify-center items-center;
-          > img {
-            @apply rounded-full;
-          }
-        }
-        > div {
-          @apply w-5/6 flex flex-col p-4 gap-2;
-          cite {
-            @apply font-semibold text-xl;
-          }
-          p {
-            @apply mt-2 italic;
-          }
-          button {
-          }
-        }
-      }
-    }
   }
-  .comment-form {
-    h2,
-    h3 {
-      @apply my-4;
+  .comment {
+    &:not(:last-child) {
+      @apply border-blue-400 border-b-[0.25rem];
     }
-    button {
-      @apply my-4 py-4 px-12 w-auto mx-auto font-medium transition-colors border-[0.25rem];
-      &.cancel {
-        @apply text-white bg-red-700 border-red-700 hover:text-red-700 hover:bg-transparent;
+    .comment {
+      @apply border-0 ml-auto w-[95%];
+      .comment-details {
+        @apply scale-95 ml-auto;
       }
-      + p {
-        @apply text-center text-red-700 font-medium;
-        &.hold {
-          @apply text-yellow-700;
-        }
-        &.approved {
-          @apply text-green-700;
+    }
+    > div:first-child {
+      @apply pb-4 flex;
+      figure {
+        @apply p-[1%] w-1/6 flex justify-center items-center;
+        > img {
+          @apply rounded-full;
         }
       }
       > div {
-        @apply w-6 h-6 rounded-full border-[0.15rem] border-white;
-        border-top: 0.15rem solid theme("colors.gray.700");
-        animation: spin 1s linear infinite;
-      }
-      &:hover {
-        > div {
-          @apply border-gray-700;
-          border-top: 0.15rem solid #fff;
+        @apply w-5/6 flex flex-col p-4 gap-2;
+        time {
+          @apply text-gray-700;
+        }
+        cite {
+          @apply font-semibold text-xl;
+        }
+        p {
+          @apply mt-2 italic break-words;
         }
       }
-    }
-    input:focus,
-    textarea:focus {
-      outline: theme("colors.gray.700") dotted 0.25rem;
-      outline-offset: 0.25rem;
     }
   }
 }
 
-// #reply-form {
-//   @apply border-b-[0.25rem] border-gray-700;
-//   p {
-//     @apply border-b-[0.25rem] border-gray-700;
-//   }
-// }
+.comment-form {
+  h2,
+  h3 {
+    @apply my-4;
+  }
+  button {
+    @apply my-4 py-4 px-12 w-auto mx-auto font-medium transition-colors border-[0.25rem];
+    &.cancel {
+      @apply text-white bg-red-700 border-red-700 hover:text-red-700 hover:bg-transparent;
+    }
+    + p {
+      @apply text-center text-red-700 font-medium;
+      &.hold {
+        @apply text-yellow-700;
+      }
+      &.approved {
+        @apply text-green-700;
+      }
+    }
+    div {
+      @apply w-6 h-6 mx-4 rounded-full border-[0.15rem] border-white;
+      border-top: 0.15rem solid theme("colors.gray.700");
+      animation: spin 1s linear infinite;
+    }
+    &:hover {
+      div {
+        @apply border-gray-700;
+        border-top: 0.15rem solid #fff;
+      }
+    }
+  }
+  input:focus,
+  textarea:focus {
+    outline: theme("colors.gray.700") dotted 0.25rem;
+    outline-offset: 0.25rem;
+  }
+}
 
 .pops {
   span {
