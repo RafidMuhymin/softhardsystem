@@ -1,7 +1,18 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { minify } from "terser";
+import fs from "node:fs";
+
+// const script = fs.readFileSync("src/scripts/search.js", "utf-8");
+// const { code } = await minify(script);
 ---
 
 <Layout title="Search">
-    <h1>Search!</h1>
+  <div class="search flex flex-col gap-4 p-8">
+    <h2 class="text-center">Searching The Soft Hard System Blog...</h2>
+    <div class="spinner w-32 h-32 mx-auto rounded-full border-[1rem] border-gray-600"></div>
+  </div>
+
+  <!-- {`<script>${code}</script>`}   -->
+  <script src={Astro.resolve("../scripts/search.js")}></script>
 </Layout>

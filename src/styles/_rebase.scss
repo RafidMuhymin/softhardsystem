@@ -1,0 +1,42 @@
+* {
+  &:focus,
+  &:focus-visible {
+    outline: 1rem auto theme("colors.blue.600");
+    outline-offset: 0.375rem;
+  }
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+pre {
+  @apply w-full overflow-x-auto;
+}
+
+time {
+  font-weight: bold;
+}
+
+strong {
+  position: relative;
+}
+
+img {
+  @apply mx-auto;
+}
+
+ol {
+  @apply list-decimal pl-4;
+}
+
+ul ul {
+  @apply pl-4;
+}
+
+figure {
+  @apply py-4;
+}
+
+figcaption {
+  @apply text-center italic p-4;
+}

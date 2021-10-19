@@ -2,38 +2,40 @@
 import Layout from "../layouts/Layout.astro";
 import ErrorImage from "../components/404.astro";
 import fetchWPData from "../data/data.js";
+import Pushable from "../components/Pushable.astro";
 
-const posts = await fetchWPData();
+const posts = (await fetchWPData()).slice(0, 3);
 ---
 
 <Layout title="Page Not Found">
-  <section class="text-center max-w-3xl mx-auto flex flex-col p-4 pb-8">
-    <h1>Oops... It seems the page you requested does not exist!</h1>
-    <div class="w-3/5 mx-auto">
-      <ErrorImage />
-    </div>
+  <section class="nf max-w-4xl mx-auto p-8">
+    <section class="text-center flex flex-col">
+      <h1>Oops... It seems the page you requested does not exist!</h1>
+      <div class="w-3/5 mx-auto">
+        <ErrorImage />
+      </div>
 
-    <p>
-      Please check if you have made a typo in the URL. Or, you can search for
-      articles below.
-    </p>
-    <form
-      class="
+      <p>
+        Please check if you have made a typo in the URL. Or, you can search for
+        articles below.
+      </p>
+      <form
+        class="
       relative
       mx-auto
       min-w-[50%]
     "
-      onsubmit="event.preventDefault();navigate('search?query=' + query.value)"
-    >
-      <input
-        type="text"
-        placeholder="Search …"
-        name="query"
-        class="form-control w-full"
-      />
-      <input
-        type="submit"
-        class="
+        onsubmit="event.preventDefault();navigate('search?query=' + query.value)"
+      >
+        <input
+          type="text"
+          placeholder="Search …"
+          name="query"
+          class="form-control w-full"
+        />
+        <input
+          type="submit"
+          class="
         bg-transparent
         absolute
         right-1
@@ -44,19 +46,30 @@ const posts = await fetchWPData();
         duration-300
         hover:opacity-100 hover:cursor-pointer
       "
-        value="🔎"
-      />
-    </form>
+          value="🔎"
+        />
+      </form>
+    </section>
 
-    <section>
-      <h3 class="pacific text-center my-12">Popular Articles</h3>
+    <section class="latest flex flex-col gap-8">
+      <h3 class="pacific text-center pt-6">Popular Articles</h3>
       {posts.map((post) => {
-        const title = post.title.rendered;
-        const { slug } = post;
+        const { title, slug, uagb_excerpt } = post;
+        const { source_url, alt_text } = post._embedded["wp:featuredmedia"][0];
         return (
-          <h4 class="flex items-center">
-            <a href={slug}>{title}</a>
-          </h4>
+          <section class="flex md:flex-col gap-8 items-center">
+            <a href={`/${slug}`} class="md:w-full w-2/5">
+              <img src={source_url} alt={alt_text} class="rounded" />
+            </a>
+
+            <div class="md:w-full w-3/5">
+              <h2>
+                <a href={`/${slug}`}>{title.rendered}</a>
+              </h2>
+              <p>{uagb_excerpt.slice(0, -8)}</p>
+              <Pushable slug={slug} />
+            </div>
+          </section>
         );
       })}
     </section>

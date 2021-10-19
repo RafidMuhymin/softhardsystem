@@ -1,0 +1,19 @@
+@use "mixins" as *;
+
+.search {
+  .result {
+    @apply flex md:flex-col gap-8 items-center;
+    > a {
+      @apply md:w-full w-2/5;
+      img {
+        @apply rounded;
+      }
+    }
+    div {
+      @apply md:w-full w-3/5;
+      p {
+        @include line-clamp();
+      }
+    }
+  }
+}

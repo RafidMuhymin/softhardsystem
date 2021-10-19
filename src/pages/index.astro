@@ -1,7 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Pushable from "../components/Pushable.astro";
 import fetchWPData from "../data/data.js";
+import Time from "../components/Time.astro";
+import Taxonomy from "../components/Taxonomy.astro";
+import Pushable from "../components/Pushable.astro";
 
 const posts = await fetchWPData();
 ---
@@ -13,7 +15,7 @@ const posts = await fetchWPData();
       <div class="flex flex-col gap-6">
         {posts.map((post) => {
           const title = post.title.rendered;
-          const { slug } = post;
+          const { slug, modified } = post;
           const excerpt = post.uagb_excerpt.slice(0, -8);
           return (
             <div class="post-excerpt">
@@ -21,6 +23,13 @@ const posts = await fetchWPData();
                 <a href={`/${slug}`}>{title}</a>
               </h4>
               <p>{excerpt}</p>
+
+              <div class="flex flex-wrap justify-between items-center gap-2 pt-2 pb-6">
+                <Time time={modified} />
+                <Taxonomy term="category" array={post._embedded["wp:term"][0]} />
+                <Taxonomy term="tag" array={post._embedded["wp:term"][1]} />
+              </div>
+
               <Pushable slug={slug} />
             </div>
           );

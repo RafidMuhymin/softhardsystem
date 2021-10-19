@@ -15,7 +15,7 @@ const category = posts.filter((post) =>
 ---
 
 <Layout title={`Category ${name}`}>
-  <div class="max-w-2xl p-6 mx-auto">
+  <div class="taxonomy max-w-2xl p-6 mx-auto">
     <h1 class="pacific flex flex-col items-center gap-2">
       {name}
       <small>{category.length} Articles Found</small>
@@ -36,7 +36,7 @@ const category = posts.filter((post) =>
 
             <p>{uagb_excerpt.slice(0, -8)}</p>
 
-            <div class="flex flex-wrap justify-between items-center gap-2 py-4">
+            <div class="flex flex-wrap justify-between items-center gap-2 pt-2 pb-6">
               <Time time={modified} />
               <Taxonomy term="category" array={post._embedded["wp:term"][0]} />
               <Taxonomy term="tag" array={post._embedded["wp:term"][1]} />
