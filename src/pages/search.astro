@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PopularContents from "../components/PopularContents.astro";
 import { minify } from "terser";
 import fs from "node:fs";
 
@@ -8,11 +9,14 @@ import fs from "node:fs";
 ---
 
 <Layout title="Search">
-  <div class="search flex flex-col gap-4 p-8">
+  <div class="search flex flex-col gap-4 p-4">
     <h2 class="text-center">Searching The Soft Hard System Blog...</h2>
     <div class="spinner w-32 h-32 mx-auto rounded-full border-[1rem] border-gray-600"></div>
   </div>
-
+  
+  <div loading="lazy" class="invisible-content hidden p-8 pt-0">
+    <PopularContents />
+  </div>
   <!-- {`<script>${code}</script>`}   -->
   <script src={Astro.resolve("../scripts/search.js")}></script>
 </Layout>

@@ -1,0 +1,13 @@
+@use "mixins" as *;
+
+.popular-contents {
+  img {
+    @include image-shadow();
+  }
+  p {
+    @include line-clamp();
+  }
+  .pushable {
+    @apply mt-4;
+  }
+}

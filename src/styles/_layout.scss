@@ -3,7 +3,7 @@
 .form-control {
   @apply shadow appearance-none py-3 px-4 text-gray-700 leading-tight;
   transition: outline 0.25s, outline-offset 0.25s;
-  box-shadow: 10px 10px 20px #ccc;
+  box-shadow: 0.625rem 0.625rem 1.25rem #ccc;
   &:focus {
     outline: 0.2rem dotted crimson;
     outline-offset: 0.5rem;
@@ -15,20 +15,6 @@
     position: relative;
     will-change: left;
     animation: ltr 1s infinite;
-  }
-}
-
-.nf {
-  .latest {
-    img {
-      filter: drop-shadow(0.05rem 0.05rem 0.1rem #bac2cf)
-        drop-shadow(0.1rem 0.1rem 0.2rem #bac2cf)
-        drop-shadow(0.2rem 0.2rem 0.4rem #bac2cf)
-        drop-shadow(0.4rem 0.4rem 0.8rem #bac2cf);
-    }
-    p {
-      @include line-clamp();
-    }
   }
 }
 
@@ -47,6 +33,18 @@
 .spinner {
   border-top: 1rem solid #66f;
   animation: spin 1s linear infinite;
+}
+
+.invisible-content {
+  content-visibility: hidden;
+}
+
+.nf {
+  .popular-contents {
+    h3 {
+      @apply pt-6;
+    }
+  }
 }
 
 @keyframes ltr {

@@ -10,6 +10,8 @@ const { title } = Astro.props;
 
 const script = fs.readFileSync("src/scripts/layout.js", "utf-8");
 const { code } = await minify(script);
+
+console.log(Astro.request.url.pathname.lastIndexOf("/"))
 ---
 
 <!DOCTYPE html>
@@ -18,7 +20,7 @@ const { code } = await minify(script);
   <body class="bg-yellow-50">
     <Header />
     <main id="root">
-      {Astro.request.params.slug ? (
+      {Astro.request.params.slug && Astro.request.url.pathname.lastIndexOf("/") === 0 ? (
         ""
       ) : (
         <svg viewBox="0 0 976 56.4">

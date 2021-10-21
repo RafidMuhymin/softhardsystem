@@ -56,6 +56,60 @@
   const { id } = document.querySelector("article");
   let maxComment = 10;
 
+  const postComment = async (e) => {
+    e.preventDefault();
+    const { innerHTML: buttonHTML } = e.submitter;
+    e.submitter.innerHTML = `<div></div>`;
+
+    const removeCancelButton = () => {
+      document
+        .querySelector(".comment-section button")
+        .nextElementSibling.remove();
+    };
+
+    const handleError = (message) => {
+      const button = document.querySelector(".comment-form button");
+      document.querySelector(".comment-form").reset();
+      button.innerHTML = buttonHTML;
+      button.insertAdjacentHTML("afterend", `<p class="error">${message}</p>`);
+      setTimeout(removeCancelButton, 3000);
+    };
+
+    fetch(`https://wp.softhardsystem.com/wp-json/wp/v2/comments`, {
+      method: "POST",
+      body: new FormData(e.target),
+    })
+      .then(async (res) => {
+        const comment = await res.json();
+        console.log(comment);
+        const { status, message } = comment;
+        if (status) {
+          document.querySelector(".comment-section").innerHTML =
+            commentSectionHTML;
+          document
+            .querySelector(".comment-section button")
+            .insertAdjacentHTML(
+              "afterend",
+              `<p class="${status}">Your comment has been ${
+                status === "hold"
+                  ? "sent for approval!"
+                  : status === "trash"
+                  ? "trashed!"
+                  : status === "spam"
+                  ? "marked as spam!"
+                  : "approved! Reload to see the changes!"
+              }</p>`
+            );
+          setTimeout(removeCancelButton, 3000);
+        } else {
+          handleError(message);
+        }
+      })
+      .catch(({ message }) => {
+        handleError(message);
+      });
+  };
+
   const commentObserver = new IntersectionObserver((entries) => {
     entries.forEach(async (entry) => {
       if (entry.isIntersecting) {
@@ -85,56 +139,57 @@
           content,
           _links,
         }) => {
-          return `<div id="${id}" class="comment">
-          <div>
-            <figure>
-              <img width="96" height="96" src="${
-                author_avatar_urls["96"]
-              }" alt="${author_name}" />
-            </figure>
-            <div class="comment-details">
-              <time dateTime="${date}Z">
-                  ${(() => {
-                    const dateArray = new Date(`${date}Z`)
-                      .toDateString()
-                      .split(" ");
-                    return `${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`;
-                  })()}
-              </time>
+          return `
+            <div id="${id}" class="comment">
+              <div>
+                <figure>
+                  <img loading="lazy" width="96" height="96" src="${
+                    author_avatar_urls["96"]
+                  }" alt="${author_name}" />
+                </figure>
+                <div class="comment-details">
+                  <time dateTime="${date}Z">
+                      ${(() => {
+                        const dateArray = new Date(`${date}Z`)
+                          .toDateString()
+                          .split(" ");
+                        return `${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`;
+                      })()}
+                  </time>
 
-              <cite>
-                <span>${
-                  author_url
-                    ? `<a href="${author_url}">${author_name}</a>`
-                    : author_name
-                }</span>
-              wrote ➜</cite>
+                  <cite>
+                    <span>${
+                      author_url
+                        ? `<a href="${author_url}">${author_name}</a>`
+                        : author_name
+                    }</span>
+                  wrote ➜</cite>
 
-              ${content.rendered}
+                  ${content.rendered}
 
-              <button class="pushable">
-                <span class="shadow"></span>
-                <span class="edge"></span>
-                <span class="front">Leave a Reply ➜</span>
-              </button>
-            </div>
-          </div>
-          ${
-            _links.children
-              ? (
-                  await Promise.all(
-                    (
-                      await (await fetch(_links.children[0].href)).json()
-                    ).map(async (reply) => await createComment(reply))
-                  )
-                ).join("")
-              : ""
-          }
-        </div>`;
+                  <button class="pushable">
+                    <span class="shadow"></span>
+                    <span class="edge"></span>
+                    <span class="front">Leave a Reply ➜</span>
+                  </button>
+                </div>
+              </div>
+              ${
+                _links.children
+                  ? (
+                      await Promise.all(
+                        (
+                          await (await fetch(_links.children[0].href)).json()
+                        ).map(async (reply) => await createComment(reply))
+                      )
+                    ).join("")
+                  : ""
+              }
+            </div>`;
         };
 
         const focus = () => {
-          const input = document.querySelector(`input[name="name"]`);
+          const input = document.querySelector(`input[name="author_name"]`);
           input.scrollIntoView({ block: "center", behavior: "smooth" });
           input.focus({ preventScroll: true });
         };
@@ -192,20 +247,14 @@
                 );
                 button.textContent = "Post Reply";
                 commentSection.replaceWith(replySection);
-                replySection = document.querySelector("#reply-section");
-                const cancelButton =
-                  replySection.querySelector("button.cancel");
+                form = document.querySelector(".comment-form");
+                const cancelButton = form.querySelector("button.cancel");
+                document.querySelector("input[name='parent']").value = path[3]
+                  .id
+                  ? path[3].id
+                  : path[4].id;
                 focus();
-                replySection.onsubmit = (e) => {
-                  e.preventDefault();
-                  const { innerHTML: buttonHTML } = e.submitter;
-                  e.submitter.innerHTML = `<div></div>`;
-                  postComment(
-                    e.target,
-                    buttonHTML,
-                    path[3].id ? path[3].id : path[4].id
-                  );
-                };
+                form.onsubmit = postComment;
                 cancelButton.onclick = () => {
                   replySection.replaceWith(commentSection);
                 };
@@ -251,81 +300,5 @@
       commentObserver.observe(element);
     });
 
-  document.querySelector(".comment-form").onsubmit = (e) => {
-    e.preventDefault();
-    const { innerHTML: buttonHTML } = e.submitter;
-    e.submitter.innerHTML = `<div></div>`;
-    postComment(e.target, buttonHTML);
-  };
-
-  const postComment = async (form, buttonHTML, parent) => {
-    fetch(
-      `https://wp.softhardsystem.com/wp-json/wp/v2/comments?post=${
-        document.querySelector("article").id
-      }&author_name=${form.name.value}&author_email=${
-        form.email.value
-      }&author_url=${form.siteurl.value}${
-        parent ? `&parent=${parent}` : ""
-      }&content=${encodeURI(form.comment.value)}`,
-      {
-        method: "POST",
-      }
-    )
-      .then(async (res) => {
-        const comment = await res.json();
-        console.log(comment);
-        const { status, message } = comment;
-        if (status) {
-          document.querySelector(".comment-section").innerHTML =
-            commentSectionHTML;
-          document
-            .querySelector(".comment-section button")
-            .insertAdjacentHTML(
-              "afterend",
-              `<p class="${status}">Your comment has been ${
-                status === "hold"
-                  ? "sent for approval!"
-                  : status === "trash"
-                  ? "trashed!"
-                  : status === "spam"
-                  ? "marked as spam!"
-                  : "approved! Reload to see the changes!"
-              }</p>`
-            );
-          setTimeout(() => {
-            document
-              .querySelector(".comment-section button")
-              .nextElementSibling.remove();
-          }, 3000);
-        } else {
-          const button = document.querySelector(".comment-form button");
-          document.querySelector(".comment-form").reset();
-          button.innerHTML = buttonHTML;
-          button.insertAdjacentHTML(
-            "afterend",
-            `<p class="error">${message}</p>`
-          );
-          setTimeout(() => {
-            document
-              .querySelector(".comment-section button")
-              .nextElementSibling.remove();
-          }, 3000);
-        }
-      })
-      .catch(({ message }) => {
-        console.log(message);
-        const button = document.querySelector(".comment-form button");
-        document.querySelector(".comment-form").reset();
-        button.innerHTML = buttonHTML;
-        button.insertAdjacentHTML(
-          "afterend",
-          `<p class="error">${message}</p>`
-        );
-        setTimeout(() => {
-          document
-            .querySelector(".comment-section button")
-            .nextElementSibling.remove();
-        }, 3000);
-      });
-  };
+  document.querySelector(".comment-form").onsubmit = postComment;
 })();

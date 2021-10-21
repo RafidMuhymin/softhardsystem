@@ -4,3 +4,10 @@
   -webkit-line-clamp: 3;
   overflow: hidden;
 }
+
+@mixin image-shadow {
+  filter: drop-shadow(0.05rem 0.05rem 0.1rem #bac2cf)
+    drop-shadow(0.1rem 0.1rem 0.2rem #bac2cf)
+    drop-shadow(0.2rem 0.2rem 0.4rem #bac2cf)
+    drop-shadow(0.4rem 0.4rem 0.8rem #bac2cf);
+}

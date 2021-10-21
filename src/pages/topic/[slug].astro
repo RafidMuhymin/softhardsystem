@@ -1,0 +1,24 @@
+---
+import TaxonomyLayout from "../../layouts/TaxonomyLayout.astro";
+
+export async function getStaticPaths() {
+  global.categories =
+    global.categories ||
+    (
+      await (
+        await fetch("https://wp.softhardsystem.com/wp-json/wp/v2/categories")
+      ).json()
+    ).filter((c) => c.slug !== "off-topic");
+  return global.categories.map(({ name, slug }) => {
+    return {
+      params: { slug },
+      props: { name, slug },
+    };
+  });
+}
+
+const { name, slug } = Astro.props;
+---
+
+<TaxonomyLayout slug={slug} name={name} />
+

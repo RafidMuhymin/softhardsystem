@@ -11,11 +11,11 @@ const date = `${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`
   {`${modified ? "Last Updated" : "Published"} : `}
   <time dateTime={`${time}Z`}>
     {`<script>
-    (() => {
-      const dateArray = new Date("${time}Z").toDateString().split(" ");
-      document.currentScript.parentElement.textContent = ${dateString};
-    })();
-  </script>`}
+      (() => {
+        const dateArray = new Date("${time}Z").toDateString().split(" ");
+        document.currentScript.parentElement.textContent = ${dateString};
+      })();
+    </script>`}
     <noscript>{date}</noscript>
   </time>
 </span>
