@@ -2,7 +2,6 @@
   <h2>Leave a comment</h2>
   <form class="comment-form flex flex-col">
     <input class="hidden" type="text" name="post" value={Astro.props.id}>
-    <input class="hidden" type="text" name="parent">
     <div class="grid grid-cols-2 gap-4">
       <label class="self-end flex flex-col"
         ><h3>Name</h3>
@@ -29,8 +28,10 @@
         type="url"
         class="p-2 border-[0.25rem] border-gray-700"
         name="author_url"
+        value=""
       />
     </label>
+    <input class="hidden" type="text" name="parent" value="0">
     <label class="flex flex-col"
       ><h3>Comment</h3>
       <textarea
