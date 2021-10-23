@@ -1,7 +1,9 @@
 <div class="comment-section py-4">
-  <h2>Leave a comment</h2>
+  <h2 class="comment-header">Leave a comment</h2>
+  <h2 class="reply-header text-center hidden"></h2>
   <form class="comment-form flex flex-col">
-    <input class="hidden" type="text" name="post" value={Astro.props.id}>
+    <input class="hidden" type="text" name="post" value="{Astro.props.id}" />
+    <input class="hidden" type="text" name="parent" value="0" />
     <div class="grid grid-cols-2 gap-4">
       <label class="self-end flex flex-col"
         ><h3>Name</h3>
@@ -15,9 +17,9 @@
       <label class="flex flex-col"
         ><h3>Email Address</h3>
         <input
-          type="author_email"
+          type="email"
           class="p-2 border-[0.25rem] border-gray-700"
-          name="email"
+          name="author_email"
           required
         />
       </label>
@@ -31,7 +33,6 @@
         value=""
       />
     </label>
-    <input class="hidden" type="text" name="parent" value="0">
     <label class="flex flex-col"
       ><h3>Comment</h3>
       <textarea
@@ -45,14 +46,28 @@
     <button
       type="submit"
       class="
+        comment-button
         li-btn
         text-white
-        bg-gray-700 border-gray-700
-        hover:text-gray-700
-        hover:bg-transparent
+        bg-gray-700
+        border-gray-700
+        hover:text-gray-700 hover:bg-transparent
       "
     >
-     Post Comment
+      Post Comment
+    </button>
+    <button
+      type="submit"
+      class="
+        cancel
+        hidden
+        text-white
+        bg-red-700
+        border-red-700
+        hover:text-red-700 hover:bg-transparent
+      "
+    >
+      Cancel Reply
     </button>
   </form>
 </div>

@@ -72,33 +72,42 @@
   }
   button {
     @apply my-4 py-4 px-12 w-auto mx-auto font-medium transition-colors border-[0.25rem];
-    &.cancel {
-      @apply text-white bg-red-700 border-red-700 hover:text-red-700 hover:bg-transparent;
-    }
-    + p {
-      @apply text-center text-red-700 font-medium;
-      &.hold {
-        @apply text-yellow-700;
-      }
-      &.approved {
-        @apply text-green-700;
-      }
-    }
     div {
       @apply w-6 h-6 mx-4 rounded-full border-[0.15rem] border-white;
-      border-top: 0.15rem solid theme("colors.gray.700");
+      border-top-color: theme("colors.gray.700");
       animation: spin 1s linear infinite;
     }
     &:hover {
       div {
         @apply border-gray-700;
-        border-top: 0.15rem solid #fff;
+        border-top-color: #fff;
       }
+    }
+  }
+  p {
+    @apply text-center text-red-700 font-medium;
+    &.hold {
+      @apply text-yellow-700;
+    }
+    &.approved {
+      @apply text-green-700;
     }
   }
   input:focus,
   textarea:focus {
     outline: theme("colors.gray.700") dotted 0.25rem;
     outline-offset: 0.25rem;
+  }
+}
+
+.reply-section {
+  .comment-header {
+    display: none;
+  }
+  .reply-header {
+    display: block;
+  }
+  .cancel {
+    display: inline-block;
   }
 }

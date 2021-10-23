@@ -68,3 +68,12 @@
     }
   }
 }
+
+@media (max-width: 767px) {
+  #header > div {
+    form,
+    nav a {
+      will-change: left;
+    }
+  }
+}

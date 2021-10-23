@@ -52,27 +52,103 @@
   twinkle();
 
   const commentSection = document.querySelector(".comment-section");
-  const { innerHTML: commentSectionHTML } = commentSection;
-  const { id } = document.querySelector("article");
+  const commentForm = document.querySelector(".comment-form");
+  const commentButton = document.querySelector(".comment-button");
+  const parent = document.querySelector("input[name='parent']");
+  const { value: postID } = document.querySelector("input[name='post']");
   let maxComment = 10;
 
-  const postComment = async (e) => {
-    e.preventDefault();
-    const { innerHTML: buttonHTML } = e.submitter;
-    e.submitter.innerHTML = `<div></div>`;
+  const focus = () => {
+    const input = document.querySelector(`input[name="author_name"]`);
+    input.scrollIntoView({ block: "center", behavior: "smooth" });
+    input.focus({ preventScroll: true });
+  };
 
-    const removeCancelButton = () => {
-      document
-        .querySelector(".comment-section button")
-        .nextElementSibling.remove();
+  const leaveReply = ({ path }) => {
+    commentSection.querySelector(".reply-header").innerHTML = `Reply to ${
+      (path[3].id ? path[1] : path[2]).querySelector("cite span").textContent
+    }`;
+    parent.value = path[3].id ? path[3].id : path[4].id;
+    commentSection.classList.add("reply-section");
+    commentButton.textContent = "Post Reply";
+    focus();
+  };
+
+  const createComment = async ({
+    id,
+    author_avatar_urls,
+    author_name,
+    author_url,
+    date,
+    content,
+    _links,
+  }) => {
+    return `
+      <div id="${id}" class="comment">
+        <div>
+          <figure>
+            <img loading="lazy" width="96" height="96" src="${
+              author_avatar_urls["96"]
+            }" alt="${author_name}" />
+          </figure>
+          <div class="comment-details">
+            <time dateTime="${date}Z">
+                ${(() => {
+                  const dateArray = new Date(`${date}Z`)
+                    .toDateString()
+                    .split(" ");
+                  return `${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`;
+                })()}
+            </time>
+
+            <cite>
+              <span>${
+                author_url
+                  ? `<a href="${author_url}">${author_name}</a>`
+                  : author_name
+              }</span>
+            wrote ➜</cite>
+
+            ${content.rendered}
+
+            <button class="pushable">
+              <span class="shadow"></span>
+              <span class="edge"></span>
+              <span class="front">Leave a Reply ➜</span>
+            </button>
+          </div>
+        </div>
+        ${
+          _links.children
+            ? (
+                await Promise.all(
+                  (
+                    await (await fetch(_links.children[0].href)).json()
+                  ).map(async (reply) => await createComment(reply))
+                )
+              ).join("")
+            : ""
+        }
+      </div>`;
+  };
+
+  commentForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const { innerHTML: buttonHTML } = commentButton;
+    commentButton.innerHTML = `<div></div>`;
+
+    const removeInfo = () => {
+      setTimeout(() => {
+        document.querySelector(".comment-section p").remove();
+      }, 3000);
     };
 
     const handleError = (message) => {
-      const button = document.querySelector(".comment-form button");
-      document.querySelector(".comment-form").reset();
-      button.innerHTML = buttonHTML;
-      button.insertAdjacentHTML("afterend", `<p class="error">${message}</p>`);
-      setTimeout(removeCancelButton, 3000);
+      removeInfo();
+      commentButton.insertAdjacentHTML(
+        "afterend",
+        `<p class="error">${message}</p>`
+      );
     };
 
     fetch(`https://wp.softhardsystem.com/wp-json/wp/v2/comments`, {
@@ -83,24 +159,46 @@
         const comment = await res.json();
         console.log(comment);
         const { status, message } = comment;
+        const { value } = parent;
+        commentButton.innerHTML = buttonHTML;
         if (status) {
-          document.querySelector(".comment-section").innerHTML =
-            commentSectionHTML;
-          document
-            .querySelector(".comment-section button")
-            .insertAdjacentHTML(
-              "afterend",
-              `<p class="${status}">Your comment has been ${
-                status === "hold"
-                  ? "sent for approval!"
-                  : status === "trash"
-                  ? "trashed!"
-                  : status === "spam"
-                  ? "marked as spam!"
-                  : "approved! Reload to see the changes!"
-              }</p>`
-            );
-          setTimeout(removeCancelButton, 3000);
+          commentButton.textContent = "Post Comment";
+          commentButton.insertAdjacentHTML(
+            "afterend",
+            `<p class="${status}">Your comment has been ${
+              status === "hold"
+                ? "sent for approval!"
+                : status === "trash"
+                ? "trashed!"
+                : status === "spam"
+                ? "marked as spam!"
+                : "approved!"
+            }</p>`
+          );
+          if (status === "approved") {
+            const newComment = await createComment(comment);
+            if (newComment) {
+              const element =
+                +value > 0
+                  ? document.getElementById(value)
+                  : document.querySelector(".comments h3");
+              element.insertAdjacentHTML(
+                `${+value > 0 ? "beforeend" : "afterend"}`,
+                newComment
+              );
+              const replyCount = document.querySelector(".reply-count");
+              replyCount.textContent = +replyCount.textContent + 1;
+              const commentBox = document.getElementById(comment.id);
+              commentBox.querySelector(".pushable").onclick = leaveReply;
+              commentBox.scrollIntoView({
+                block: "center",
+                behavior: "smooth",
+              });
+            }
+          }
+          commentSection.classList.remove("reply-section");
+          commentForm.reset();
+          removeInfo();
         } else {
           handleError(message);
         }
@@ -117,11 +215,11 @@
         const { replyCount, commentCount, comments } = await (async () => {
           const replyCount = (
             await fetch(
-              `https://wp.softhardsystem.com/wp-json/wp/v2/comments?per_page=1&post=${id}`
+              `https://wp.softhardsystem.com/wp-json/wp/v2/comments?per_page=1&post=${postID}`
             )
           ).headers.get("X-WP-TOTAL");
           const response = await fetch(
-            `https://wp.softhardsystem.com/wp-json/wp/v2/comments?parent=0&post=${id}`
+            `https://wp.softhardsystem.com/wp-json/wp/v2/comments?parent=0&post=${postID}`
           );
           const commentCount = response.headers.get("X-WP-TOTAL");
           const comments = await response.json();
@@ -130,76 +228,12 @@
 
         console.log({ count: replyCount, comments });
 
-        const createComment = async ({
-          id,
-          author_avatar_urls,
-          author_name,
-          author_url,
-          date,
-          content,
-          _links,
-        }) => {
-          return `
-            <div id="${id}" class="comment">
-              <div>
-                <figure>
-                  <img loading="lazy" width="96" height="96" src="${
-                    author_avatar_urls["96"]
-                  }" alt="${author_name}" />
-                </figure>
-                <div class="comment-details">
-                  <time dateTime="${date}Z">
-                      ${(() => {
-                        const dateArray = new Date(`${date}Z`)
-                          .toDateString()
-                          .split(" ");
-                        return `${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`;
-                      })()}
-                  </time>
-
-                  <cite>
-                    <span>${
-                      author_url
-                        ? `<a href="${author_url}">${author_name}</a>`
-                        : author_name
-                    }</span>
-                  wrote ➜</cite>
-
-                  ${content.rendered}
-
-                  <button class="pushable">
-                    <span class="shadow"></span>
-                    <span class="edge"></span>
-                    <span class="front">Leave a Reply ➜</span>
-                  </button>
-                </div>
-              </div>
-              ${
-                _links.children
-                  ? (
-                      await Promise.all(
-                        (
-                          await (await fetch(_links.children[0].href)).json()
-                        ).map(async (reply) => await createComment(reply))
-                      )
-                    ).join("")
-                  : ""
-              }
-            </div>`;
-        };
-
-        const focus = () => {
-          const input = document.querySelector(`input[name="author_name"]`);
-          input.scrollIntoView({ block: "center", behavior: "smooth" });
-          input.focus({ preventScroll: true });
-        };
-
         if (comments) {
           const commentsContainer = document.querySelector(".comments");
           const { innerHTML: commentHTML } = commentsContainer;
           commentsContainer.innerHTML = `<h3 align="center">${
             replyCount > 0
-              ? `${replyCount} Replies`
+              ? `<span class="reply-count">${replyCount}</span> Replies`
               : "No one has commented yet"
           } on <span class="pacific">${
             document.querySelector("h1").textContent
@@ -231,34 +265,7 @@
 
           commentsContainer.innerHTML !== commentHTML &&
             document.querySelectorAll("button.pushable").forEach((btn) => {
-              btn.onclick = ({ path }) => {
-                const authorName = (
-                  path[3].id ? path[1] : path[2]
-                ).querySelector("cite span").textContent;
-                let replySection = commentSection.cloneNode(true);
-                replySection.id = "reply-section";
-                replySection.querySelector(
-                  "h2"
-                ).outerHTML = `<h2 align="center">Reply to ${authorName}</h2>`;
-                const button = replySection.querySelector("button");
-                button.insertAdjacentHTML(
-                  "afterend",
-                  `<button class="cancel">Cancel Reply</button>`
-                );
-                button.textContent = "Post Reply";
-                commentSection.replaceWith(replySection);
-                form = document.querySelector(".comment-form");
-                const cancelButton = form.querySelector("button.cancel");
-                document.querySelector("input[name='parent']").value = path[3]
-                  .id
-                  ? path[3].id
-                  : path[4].id;
-                focus();
-                form.onsubmit = postComment;
-                cancelButton.onclick = () => {
-                  replySection.replaceWith(commentSection);
-                };
-              };
+              btn.onclick = leaveReply;
             });
 
           if (!(replyCount > 0)) {
@@ -273,7 +280,7 @@
                 (
                   await (
                     await fetch(
-                      `https://wp.softhardsystem.com/wp-json/wp/v2/comments?parent=0&post=${id}&page=${
+                      `https://wp.softhardsystem.com/wp-json/wp/v2/comments?parent=0&post=${postID}&page=${
                         maxComment / 10 + 1
                       }`
                     )
@@ -300,5 +307,10 @@
       commentObserver.observe(element);
     });
 
-  document.querySelector(".comment-form").onsubmit = postComment;
+  document.querySelector("button.cancel").onclick = (e) => {
+    e.preventDefault();
+    commentButton.textContent = "Post Comment";
+    commentSection.classList.remove("reply-section");
+    commentForm.reset();
+  };
 })();

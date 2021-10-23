@@ -43,7 +43,7 @@ const TOC = generateTOC(document);
   <div class="flex md:flex-col-reverse">
     <section class="content flex flex-col w-2/3 md:w-full p-8 pb-0 md:pt-0">
       <div>
-        <article id={post.id}>{document.body.innerHTML}</article>
+        <article>{document.body.innerHTML}</article>
         <div class="flex flex-wrap justify-between items-center italic gap-4 py-4">
           <Time time={post.date} />
           <Time time={post.modified} modified />
