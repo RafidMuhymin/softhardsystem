@@ -7,9 +7,6 @@ import { minify } from "terser";
 import fs from "node:fs";
 
 const { title } = Astro.props;
-
-const script = fs.readFileSync("src/scripts/layout.js", "utf-8");
-const { code } = await minify(script);
 ---
 
 <!DOCTYPE html>
@@ -29,6 +26,12 @@ const { code } = await minify(script);
     </main>
     <Footer />
     <Spa containerSelector="#root" />
-    {`<script>${code}</script>`}
+    {import.meta.env.NODE_ENV === "development" ? (
+      <script src={Astro.resolve("../../scripts/layout.js")}></script>
+    ) : (
+      `<script>${await minify(
+        fs.readFileSync("src/scripts/layout.js", "utf-8")
+      ).code}</script>`
+    )}
   </body>
 </html>

@@ -22,13 +22,13 @@ const { source_url, alt_text } = post._embedded["wp:featuredmedia"][0];
 const { document } = new JSDOM(post.content.rendered).window;
 [...document.images].forEach((img) => (img.loading = "lazy"));
 const TOC = generateTOC(document);
-
-// const script = fs.readFileSync("src/scripts/postlayout.js", "utf-8");
-// const { code } = await minify(script);
 ---
 
 <Layout title={title}>
-  <div slot="wave" class="bg-gradient-to-b from-blue-200 to-[#b9daff] px-16 py-8">
+  <div
+    slot="wave"
+    class="bg-gradient-to-b from-blue-200 to-[#b9daff] px-16 py-8"
+  >
     <h1 class="pacific !text-red-700">{title}</h1>
     <div class="text-lg text-gray-700 italic">
       By {post._embedded.author[0].name + " • "}
@@ -37,7 +37,13 @@ const TOC = generateTOC(document);
   </div>
 
   <figure class="featured-image max-w-3xl p-8 pb-0 mx-auto">
-    <img width="2048" height="1096" class="rounded my-2" src={source_url} alt={alt_text} />
+    <img
+      width="2048"
+      height="1096"
+      class="rounded my-2"
+      src={source_url}
+      alt={alt_text}
+    />
     <figcaption>{alt_text}</figcaption>
   </figure>
 
@@ -62,12 +68,17 @@ const TOC = generateTOC(document);
     </section>
   </div>
 
+  {import.meta.env.NODE_ENV === "development" ? (
+    <script src={Astro.resolve("../../scripts/postlayout.js")}></script>
+  ) : (
+    `<script>${await minify(
+      fs.readFileSync("src/scripts/postlayout.js", "utf-8")
+    ).code}</script>`
+  )}
+
   <section class="non-content max-w-3xl mx-auto p-8 pt-0">
     <Author author={post._embedded.author[0]} />
     <CommentForm id={post.id} />
     <Comments />
   </section>
-
-  <!-- {`<script>${code}</script>`}   -->
-  <script src={Astro.resolve("../../scripts/postlayout.js")}></script>
 </Layout>

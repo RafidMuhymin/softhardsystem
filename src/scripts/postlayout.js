@@ -1,4 +1,4 @@
-(() => {
+const postlayout = () => {
   window.onMount = () => {
     scan();
     twinkle();
@@ -313,4 +313,7 @@
     commentSection.classList.remove("reply-section");
     commentForm.reset();
   };
-})();
+};
+
+window.addEventListener("load", postlayout);
+window.onMount = postlayout;
