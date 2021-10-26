@@ -48,5 +48,9 @@ export default function (document) {
     toc.innerHTML = toc.firstChild.innerHTML;
   }
 
+  toc.querySelectorAll("ul ul").forEach((ul) => {
+    ul.outerHTML = `<li>${ul.outerHTML}</li>`;
+  });
+
   return toc.innerHTML;
 }
