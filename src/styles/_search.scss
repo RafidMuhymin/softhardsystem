@@ -1,17 +1,7 @@
 @use "mixins" as *;
 
 .search {
-  .search-box {
-    @apply p-4 flex flex-col;
-    h1 {
-      @apply text-4xl my-6 text-center;
-    }
-  }
   .search-results {
-    @apply flex flex-col gap-8;
-    > h2 {
-      @apply text-center;
-    }
     .result {
       @apply flex md:flex-col gap-8 md:gap-0 items-center;
       > a {

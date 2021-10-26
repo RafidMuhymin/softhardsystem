@@ -20,12 +20,10 @@ document.getElementById("menubar").onclick = () => {
   }
 };
 
-window.onresize = () => {
-  if (window.innerWidth >= 768) {
-    checkbox.checked = false;
-    document.body.style.overflow = "auto";
-  }
-};
+window.matchMedia("(min-width : 768px)").addEventListener("change", (e) => {
+  e.matches &&
+    ((checkbox.checked = false), (document.body.style.overflow = "auto"));
+});
 
 window.onNavigate = () => {
   checkbox.checked = false;

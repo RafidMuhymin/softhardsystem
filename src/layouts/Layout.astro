@@ -10,8 +10,6 @@ const { title } = Astro.props;
 
 const script = fs.readFileSync("src/scripts/layout.js", "utf-8");
 const { code } = await minify(script);
-
-console.log(Astro.request.url.pathname.lastIndexOf("/"))
 ---
 
 <!DOCTYPE html>

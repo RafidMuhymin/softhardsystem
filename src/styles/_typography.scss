@@ -5,14 +5,14 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("fonts/pacifico-v17-latin-regular.eot");
+  src: url("/fonts/pacifico-v17-latin-regular.eot");
   src: local(""),
-    url("fonts/pacifico-v17-latin-regular.eot?#iefix")
+    url("/fonts/pacifico-v17-latin-regular.eot?#iefix")
       format("embedded-opentype"),
-    url("fonts/pacifico-v17-latin-regular.woff2") format("woff2"),
-    url("fonts/pacifico-v17-latin-regular.woff") format("woff"),
-    url("fonts/pacifico-v17-latin-regular.ttf") format("truetype"),
-    url("fonts/pacifico-v17-latin-regular.svg#Pacifico") format("svg");
+    url("/fonts/pacifico-v17-latin-regular.woff2") format("woff2"),
+    url("/fonts/pacifico-v17-latin-regular.woff") format("woff"),
+    url("/fonts/pacifico-v17-latin-regular.ttf") format("truetype"),
+    url("/fonts/pacifico-v17-latin-regular.svg#Pacifico") format("svg");
 }
 
 :root {

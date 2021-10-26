@@ -10,11 +10,56 @@ import fs from "node:fs";
 
 <Layout title="Search">
   <div class="search flex flex-col gap-4 p-4">
-    <h2 class="text-center">Searching The Soft Hard System Blog...</h2>
-    <div class="spinner w-32 h-32 mx-auto rounded-full border-[1rem] border-t-[1rem] border-gray-600"></div>
+    <div class="search-box p-4 flex-col hidden invisible-content">
+      <h1 class="text-4xl my-6 text-center">Search The Soft Hard System Blog</h1>
+      <form
+        class="relative mx-auto min-w-[50%]"
+        onsubmit="event.preventDefault();navigate('search?query=' + query.value)"
+      >
+        <input
+          type="text"
+          placeholder="Search …"
+          name="query"
+          class="form-control w-full"
+        />
+        <input
+          type="submit"
+          value="🔎"
+          class="
+            bg-transparent
+            absolute
+            right-1
+            top-2/4
+            -translate-y-2/4
+            opacity-70
+            transition-opacity
+            duration-300
+            hover:opacity-100 hover:cursor-pointer
+          "
+        />
+      </form>
+    </div>
+
+    <main class="search-results flex-col gap-8 pb-4 hidden invisible-content">
+      <h2 class="result-count text-center"></h2>
+    </main>
+
+    <div class="searching pb-4">
+      <h2 class="text-center">Searching The Soft Hard System Blog...</h2>
+      <div
+        class="
+          spinner
+          w-32
+          h-32
+          mx-auto
+          rounded-full
+          border-[1rem] border-t-[1rem] border-gray-600
+        "
+      ></div>
+    </div>
   </div>
   
-  <div loading="lazy" class="invisible-content hidden p-8 pt-0">
+  <div class="populars invisible-content hidden p-8 pt-0">
     <PopularContents />
   </div>
   <!-- {`<script>${code}</script>`}   -->
