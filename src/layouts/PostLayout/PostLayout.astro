@@ -20,6 +20,7 @@ const { title, post, prevNext } = Astro.props;
 const { source_url, alt_text } = post._embedded["wp:featuredmedia"][0];
 
 const { document } = new JSDOM(post.content.rendered).window;
+[...document.images].forEach((img) => (img.loading = "lazy"));
 const TOC = generateTOC(document);
 
 // const script = fs.readFileSync("src/scripts/postlayout.js", "utf-8");
@@ -36,7 +37,7 @@ const TOC = generateTOC(document);
   </div>
 
   <figure class="featured-image max-w-3xl p-8 pb-0 mx-auto">
-    <img loading="lazy" class="rounded my-2" src={source_url} alt={alt_text} />
+    <img width="2048" height="1096" class="rounded my-2" src={source_url} alt={alt_text} />
     <figcaption>{alt_text}</figcaption>
   </figure>
 

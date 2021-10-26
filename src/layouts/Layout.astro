@@ -18,14 +18,11 @@ const { code } = await minify(script);
   <body class="bg-yellow-50">
     <Header />
     <main id="root">
-      {Astro.request.params.slug && Astro.request.url.pathname.lastIndexOf("/") === 0 ? (
-        ""
-      ) : (
+      <slot name="wave">
         <svg viewBox="0 0 976 56.4">
           <path d="M976 42C544 87 380 6 0 55L1 0h975Z" fill="#bfdbfe" />
         </svg>
-      )}
-      <slot name="wave" />
+      </slot>
       <div class="max-w-[1200px] mx-auto">
         <slot />
       </div>
