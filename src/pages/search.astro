@@ -1,8 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import PopularContents from "../components/PopularContents.astro";
-import { minify } from "terser";
-import fs from "node:fs";
+import InlineScript from "../components/Script.astro";
 ---
 
 <Layout title="Search">
@@ -59,12 +58,6 @@ import fs from "node:fs";
   <div class="populars invisible-content hidden p-8 pt-0">
     <PopularContents />
   </div>
-
-  {import.meta.env.NODE_ENV === "development" ? (
-    <script src={Astro.resolve("../../scripts/search.js")}></script>
-  ) : (
-    `<script>${await minify(
-      fs.readFileSync("src/scripts/search.js", "utf-8")
-    ).code}</script>`
-  )}
+  
+  <InlineScript filename="search" />
 </Layout>

@@ -1,0 +1,16 @@
+---
+import { minify } from "terser";
+import fs from "node:fs";
+
+const { filename } = Astro.props;
+---
+
+{
+  import.meta.env.NODE_ENV === "production" ? (
+    <script src={Astro.resolve(`../scripts/${filename}.js`)}></script>
+  ) : (
+    `<script>${
+      (await minify(fs.readFileSync(`src/scripts/${filename}.js`, "utf-8"))).code
+    }</script>`
+  )
+}

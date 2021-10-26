@@ -1,5 +1,4 @@
 ---
-import path from "node:path";
 import Layout from "../Layout.astro";
 import PrevNext from "./PrevNext.astro";
 import Author from "./Author.astro";
@@ -9,8 +8,7 @@ import Comments from "./Comments.astro";
 import generateTOC from "./generateTOC.js";
 import Time from "../../components/Time.astro";
 import Taxonomy from "../../components/Taxonomy.astro";
-import { minify } from "terser";
-import fs from "node:fs";
+import InlineScript from "../../components/Script.astro";
 
 import { createRequire } from "node:module";
 const moduleRequire = createRequire(import.meta.url);
@@ -68,13 +66,7 @@ const TOC = generateTOC(document);
     </section>
   </div>
 
-  {import.meta.env.NODE_ENV === "development" ? (
-    <script src={Astro.resolve("../../scripts/postlayout.js")}></script>
-  ) : (
-    `<script>${await minify(
-      fs.readFileSync("src/scripts/postlayout.js", "utf-8")
-    ).code}</script>`
-  )}
+  <InlineScript filename="postlayout" />
 
   <section class="non-content max-w-3xl mx-auto p-8 pt-0">
     <Author author={post._embedded.author[0]} />

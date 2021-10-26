@@ -3,8 +3,7 @@ import { Spa } from "astro-spa";
 import HeadComponent from "./HeadComponent.astro";
 import Header from "./Header.astro";
 import Footer from "./Footer.astro";
-import { minify } from "terser";
-import fs from "node:fs";
+import InlineScript from "../components/Script.astro";
 
 const { title } = Astro.props;
 ---
@@ -12,6 +11,11 @@ const { title } = Astro.props;
 <!DOCTYPE html>
 <html lang="en">
   <HeadComponent title={title} />
+  <script>
+    new PerformanceObserver(entryList => {
+        console.log(entryList.getEntries());
+    }).observe({ type: "layout-shift", buffered: true });
+  </script>
   <body class="bg-yellow-50">
     <Header />
     <main id="root">
@@ -26,12 +30,6 @@ const { title } = Astro.props;
     </main>
     <Footer />
     <Spa containerSelector="#root" />
-    {import.meta.env.NODE_ENV === "development" ? (
-      <script src={Astro.resolve("../../scripts/layout.js")}></script>
-    ) : (
-      `<script>${await minify(
-        fs.readFileSync("src/scripts/layout.js", "utf-8")
-      ).code}</script>`
-    )}
+    <InlineScript filename="layout" />
   </body>
 </html>
