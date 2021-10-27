@@ -2,6 +2,7 @@
   "dependencies": {
     "@snowpack/plugin-dotenv": "^2.2.0",
     "astro": "^0.20.7",
+    "astro-seo": "^0.3.13",
     "astro-spa": "^1.2.3",
     "jsdom": "^17.0.0",
     "number-to-words": "^1.2.4",
