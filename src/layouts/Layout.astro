@@ -4,24 +4,17 @@ import HeadComponent from "./HeadComponent.astro";
 import Header from "./Header.astro";
 import Footer from "./Footer.astro";
 import InlineScript from "../components/Script.astro";
-
-const { title } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
-  <HeadComponent title={title} />
-  <script>
-    new PerformanceObserver(entryList => {
-        console.log(entryList.getEntries());
-    }).observe({ type: "layout-shift", buffered: true });
-  </script>
+  <HeadComponent {...Astro.props} />
   <body class="bg-yellow-50">
     <Header />
     <main id="root">
       <slot name="wave">
         <svg viewBox="0 0 976 56.4">
-          <path d="M976 42C544 87 380 6 0 55L1 0h975Z" fill="#bfdbfe" />
+          <path d="M976 42C544 87 380 6 0 55L1 0h975Z" fill="#bfdbfe"></path>
         </svg>
       </slot>
       <div class="max-w-[1200px] mx-auto">

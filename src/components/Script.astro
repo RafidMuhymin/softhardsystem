@@ -5,6 +5,8 @@ import fs from "node:fs";
 const { filename } = Astro.props;
 ---
 
+<!-- prettier-ignore -->
+
 {
   import.meta.env.NODE_ENV === "development" ? (
     <script src={Astro.resolve(`../scripts/${filename}.js`)}></script>

@@ -1,17 +1,56 @@
 ---
-export interface Props {
-    title : string;
-}
+import SEO from "../astro-seo/src/SEO.astro";
 
-const { title } = Astro.props as Props;
+const {
+  title,
+  description,
+  type = "website",
+  image = `${Astro.site.href}softhardsystem.png`,
+  width = 1024,
+  height = 224,
+  alt = "Soft Hard System",
+  article,
+} = Astro.props;
+
+const url = Astro.request.canonicalURL.href;
 ---
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style lang="scss" global>
-        @use "../styles/astro.scss";
-    </style>
-    <title>{title} | Soft Hard System</title>
+<head lang="en-US">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style lang="scss" global> @use "../styles/astro.scss"; </style>
+
+  <!-- prettier-ignore -->
+
+  <SEO
+    title={`${title} | Soft Hard System`}
+    {description}
+    canonical={url}
+    openGraph={{
+      article,
+      basic: {
+        title,
+        type,
+        image,
+        url
+      },
+      optional: {
+        description
+      },
+      image: {
+        type: "image/png",
+        width,
+        height,
+        alt
+      }
+    }}
+    twitter={{
+      card: "summary_large_image",
+      creator: "@wafi_rafid",
+    }}
+    extend={{
+      meta: []
+    }}
+  />
 </head>
