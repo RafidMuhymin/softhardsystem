@@ -1,21 +1,14 @@
 ---
 const { time, modified } = Astro.props;
-const dateString = "`${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`";
-const dateArray = new Date(`${time}Z`).toDateString().split(" ");
-const date = `${dateArray[0]}, ${dateArray[1]} ${dateArray[2]}, ${dateArray[3]}`;
 ---
-
-
 
 <span class="inline-block">
   {`${modified ? "Last Updated" : "Published"} : `}
   <time dateTime={`${time}Z`}>
-    {`<script>
-      (() => {
-        const dateArray = new Date("${time}Z").toDateString().split(" ");
-        document.currentScript.parentElement.textContent = ${dateString};
-      })();
-    </script>`}
-    <noscript>{date}</noscript>
+    {new Date(`${time}Z`)
+      .toDateString()
+      .split(" ")
+      .map((slice, i) => (i === 1 || i === 3 ? slice : slice + ","))
+      .join(" ")}
   </time>
 </span>

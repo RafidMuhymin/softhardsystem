@@ -24,10 +24,9 @@ const taxonomy = posts.filter((post) =>
       {taxonomy.map((post) => {
         const { title, slug, modified, uagb_excerpt } = post;
         const { source_url, alt_text } = post._embedded["wp:featuredmedia"][0];
-        return (
-          <section>
+        return <section>
             <a href={`/${slug}`}>
-              <img loading="lazy" src={source_url} alt={alt_text} />
+              <img loading="lazy" width="2048" height="1096" src={source_url} alt={alt_text} />
             </a>
 
             <h2>
@@ -41,10 +40,9 @@ const taxonomy = posts.filter((post) =>
               <Taxonomy term="category" array={post._embedded["wp:term"][0]} />
               <Taxonomy term="tag" array={post._embedded["wp:term"][1]} />
             </div>
-            
+
             <Pushable slug={slug} />
-          </section>
-        );
+          </section>;
       })}
     </div>
   </div>

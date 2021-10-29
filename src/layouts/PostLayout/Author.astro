@@ -7,7 +7,13 @@ const avatar = author.avatar_urls["24"].replace("s=24", "s=192");
 ---
 
 <div class="author flex md:flex-col items-center">
-  <img loading="lazy" width="192" height="192" class="rounded-full p-4" src={avatar} alt={`${author.name} | Soft Hard System`} />
+  <img
+    loading="lazy"
+    width="192"
+    height="192"
+    class="rounded-full p-4"
+    src={avatar}
+    alt={`${author.name} | Soft Hard System`} />
   <div class="p-4">
     <h2>{author.name}</h2>
     <p>{author.description}</p>
