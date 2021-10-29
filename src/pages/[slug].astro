@@ -3,14 +3,15 @@ import Layout from "../layouts/Layout.astro";
 import PostLayout from "../layouts/PostLayout/PostLayout.astro";
 import fetchWPData from "../data/data.js";
 
-export async function getStaticPaths({rss}) {
+export async function getStaticPaths({ rss }) {
   const posts = await fetchWPData();
   const legalDocs = await fetchWPData(true);
 
   rss({
-    title: 'Soft Hard System',
-    description: 'A blog by Rafid Muhymin Wafi on Software, Hardware and System (Code)',
-    items: posts.map(item => ({
+    title: "Soft Hard System",
+    description:
+      "A blog by Rafid Muhymin Wafi on Software, Hardware and System (Code)",
+    items: posts.map((item) => ({
       title: item.title.rendered,
       description: item.uagb_excerpt.slice(0, -8),
       link: item.slug,
@@ -35,15 +36,12 @@ export async function getStaticPaths({rss}) {
 const { post, prevNext } = Astro.props;
 const title = post.title.rendered;
 const content = post.content.rendered;
+
+const { name: description } = post.head_tags.find(
+  (tag) => tag.attributes?.name === "description"
+).attributes;
 ---
 
-
-{
-  global.posts.includes(post) ? (
-    <PostLayout title={title} post={post} prevNext={prevNext} />
-  ) : (
-    <Layout title={title}>
-      <div class="p-12">{content}</div>
-    </Layout>
-  )
-}
+{global.posts.includes(post) ? <PostLayout title={title} post={post} prevNext={prevNext} description={description} /> : <Layout title={title} description={description}>
+    <div class="p-12">{content}</div>
+  </Layout>}

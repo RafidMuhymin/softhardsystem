@@ -14,19 +14,17 @@ import { createRequire } from "node:module";
 const moduleRequire = createRequire(import.meta.url);
 const { JSDOM } = moduleRequire("jsdom");
 
-const { title, post, prevNext } = Astro.props;
+const { title, post, prevNext, description } = Astro.props;
 const { source_url, alt_text } = post._embedded["wp:featuredmedia"][0];
 
 const { document } = new JSDOM(post.content.rendered).window;
 [...document.images].forEach((img) => (img.loading = "lazy"));
 const TOC = generateTOC(document);
-
-// console.log(post.uagb_excerpt.slice(0, -8));
-console.log(post.head_tags);
 ---
 
 <Layout
   {title}
+  {description}
   article={{ publishedTime: post.date, modifiedTime: post.modified, authors: ["https://www.facebook.com/rafidmuhyminwafi"], section: "Technology", tags: post._embedded["wp:term"][1].map(({ name }) => name) }}>
   <div
     slot="wave"
