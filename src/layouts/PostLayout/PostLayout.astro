@@ -20,6 +20,9 @@ const { source_url, alt_text } = post._embedded["wp:featuredmedia"][0];
 const { document } = new JSDOM(post.content.rendered).window;
 [...document.images].forEach((img) => (img.loading = "lazy"));
 const TOC = generateTOC(document);
+
+// console.log(post.uagb_excerpt.slice(0, -8));
+console.log(post.head_tags);
 ---
 
 <Layout

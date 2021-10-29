@@ -1,19 +1,19 @@
 @use "poly-fluid-sizing" as pfz;
 
-// @font-face {
-//   font-family: "Pacifico";
-//   font-style: normal;
-//   font-weight: 400;
-//   font-display: optional;
-//   src: url("/fonts/pacifico-v17-latin-regular.eot");
-//   src: local(""),
-//     url("/fonts/pacifico-v17-latin-regular.eot?#iefix")
-//       format("embedded-opentype"),
-//     url("/fonts/pacifico-v17-latin-regular.woff2") format("woff2"),
-//     url("/fonts/pacifico-v17-latin-regular.woff") format("woff"),
-//     url("/fonts/pacifico-v17-latin-regular.ttf") format("truetype"),
-//     url("/fonts/pacifico-v17-latin-regular.svg#Pacifico") format("svg");
-// }
+@font-face {
+  font-family: "Pacifico";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("/fonts/pacifico-v17-latin-regular.eot");
+  src: local(""),
+    url("/fonts/pacifico-v17-latin-regular.eot?#iefix")
+      format("embedded-opentype"),
+    url("/fonts/pacifico-v17-latin-regular.woff2") format("woff2"),
+    url("/fonts/pacifico-v17-latin-regular.woff") format("woff"),
+    url("/fonts/pacifico-v17-latin-regular.ttf") format("truetype"),
+    url("/fonts/pacifico-v17-latin-regular.svg#Pacifico") format("svg");
+}
 
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
@@ -95,5 +95,6 @@ small {
 
 em,
 .pacific {
+  font-family: Pacifico, cursive;
   color: crimson;
 }
