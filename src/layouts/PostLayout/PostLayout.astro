@@ -15,7 +15,13 @@ const moduleRequire = createRequire(import.meta.url);
 const { JSDOM } = moduleRequire("jsdom");
 
 const { title, post, prevNext, description } = Astro.props;
-const { source_url, alt_text } = post._embedded["wp:featuredmedia"][0];
+const {
+  source_url: image,
+  alt_text: alt,
+  media_details,
+} = post._embedded["wp:featuredmedia"][0];
+
+const { width, height } = media_details;
 
 const { document } = new JSDOM(post.content.rendered).window;
 [...document.images].forEach((img) => (img.loading = "lazy"));
@@ -25,6 +31,10 @@ const TOC = generateTOC(document);
 <Layout
   {title}
   {description}
+  {image}
+  {width}
+  {height}
+  {alt}
   article={{ publishedTime: post.date, modifiedTime: post.modified, authors: ["https://www.facebook.com/rafidmuhyminwafi"], section: "Technology", tags: post._embedded["wp:term"][1].map(({ name }) => name) }}>
   <div
     slot="wave"
@@ -37,13 +47,8 @@ const TOC = generateTOC(document);
   </div>
 
   <figure class="featured-image max-w-3xl p-8 pb-0 mx-auto">
-    <img
-      width="2048"
-      height="1096"
-      class="rounded my-2"
-      src={source_url}
-      alt={alt_text} />
-    <figcaption>{alt_text}</figcaption>
+    <img width="2048" height="1096" class="rounded my-2" src={image} {alt} />
+    <figcaption>{alt}</figcaption>
   </figure>
 
   <div class="flex md:flex-col-reverse">

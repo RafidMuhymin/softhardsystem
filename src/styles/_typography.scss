@@ -1,6 +1,18 @@
 @use "poly-fluid-sizing" as pfz;
 
 @font-face {
+  font-family: "Wotfard";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("/fonts/wotfard-regular-webfont.eot");
+  src: local(""),
+    url("/fonts/wotfard-regular-webfont.eot?#iefix") format("embedded-opentype"),
+    url("/fonts/wotfard-regular-webfont.woff2") format("woff2"),
+    url("/fonts/wotfard-regular-webfont.ttf") format("truetype");
+}
+
+@font-face {
   font-family: "Pacifico";
   font-style: normal;
   font-weight: 400;
@@ -16,8 +28,7 @@
 }
 
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: "Wotfard", system-ui, -apple-system, sans-serif;
   @include pfz.poly-fluid-sizing(
     "font-size",
     (
@@ -41,33 +52,26 @@ a {
 }
 
 p {
-  font-size: 1.1rem;
-  font-weight: 400;
+  @apply text-[1.1rem] font-normal;
 }
 
 h6 {
-  font-weight: 400;
-  font-size: 1.15rem;
+  @apply text-[1.15rem] font-normal;
 }
 h5 {
-  font-weight: 500;
-  font-size: 1.25rem;
+  @apply text-xl font-medium;
 }
 h4 {
-  font-weight: 600;
-  font-size: 1.4rem;
+  @apply text-[1.4rem] font-semibold;
 }
 h3 {
-  font-weight: 700;
-  font-size: 1.6rem;
+  @apply text-[1.6rem] font-bold;
 }
 h2 {
-  font-weight: 800;
-  font-size: 1.8rem;
+  @apply text-[1.8rem] font-extrabold;
 }
 h1 {
-  font-weight: 900;
-  font-size: 2.1rem;
+  @apply text-[2.1rem] font-black;
 }
 
 h1,
@@ -77,7 +81,7 @@ h4,
 h5,
 h6,
 p {
-  margin: 1.25rem 0;
+  @apply my-5 mx-0;
 }
 
 h1,

@@ -4,8 +4,10 @@ import SEO from "../astro-seo/src/SEO.astro";
 const {
   title,
   description,
+  noindex,
+  nofollow,
   type = "website",
-  image = `${Astro.site.href}softhardsystem.png`,
+  image = `/softhardsystem.png`,
   width = 1024,
   height = 224,
   alt = "Soft Hard System",
@@ -26,13 +28,14 @@ const url = Astro.request.canonicalURL.href;
   <SEO
     title={`${title} | Soft Hard System`}
     {description}
-    canonical={url}
+    {noindex}
+    {nofollow}
     openGraph={{
       article,
       basic: {
         title,
         type,
-        image,
+        image: Astro.site.href.slice(0, -1) + image,
         url
       },
       optional: {

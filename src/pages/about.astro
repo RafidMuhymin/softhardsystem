@@ -1,24 +1,26 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-const author = global.authorData = global.authorData ? global.authorData : await (
-  await fetch("https://wp.softhardsystem.com/wp-json/wp/v2/users/1")
-).json();
+const author = (global.authorData = global.authorData
+  ? global.authorData
+  : await (
+      await fetch("https://wp.softhardsystem.com/wp-json/wp/v2/users/1")
+    ).json());
 ---
 
-<Layout title="About">
-  <div class="p-6">
+<Layout title="Rafid Muhymin Wafi" description={author.description}>
+  <div class="p-6 max-w-xl mx-auto">
     <figure class="mx-auto">
-      <img loading="lazy"
+      <img
+        loading="lazy"
         class="rounded-full"
-        width="512"
-        height="512"
-        src={author.avatar_urls["24"].replace("s=24", "s=512")}
-        alt={author.name}
-      />
+        width="576"
+        height="576"
+        src={author.avatar_urls["24"].replace("s=24", "s=576")}
+        alt={author.name} />
       <figcaption>{author.name}</figcaption>
     </figure>
     <h1 class="pacific text-center">Hi, I'm {author.name}!</h1>
-    <p class="w-2/4 mx-auto text-center md:w-auto">{author.description}</p>
+    <p class="text-center">{author.description}</p>
   </div>
 </Layout>

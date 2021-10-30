@@ -4,20 +4,20 @@ import PopularContents from "../components/PopularContents.astro";
 import InlineScript from "../components/Script.astro";
 ---
 
-<Layout title="Search">
+<Layout title="Search The Soft Hard System Blog" noindex nofollow>
   <div class="search flex flex-col gap-4 p-4">
     <div class="search-box p-4 flex-col hidden invisible-content">
-      <h1 class="text-4xl my-6 text-center">Search The Soft Hard System Blog</h1>
+      <h1 class="text-4xl my-6 text-center">
+        Search The Soft Hard System Blog
+      </h1>
       <form
         class="relative mx-auto min-w-[50%]"
-        onsubmit="event.preventDefault();navigate('search?query=' + query.value)"
-      >
+        onsubmit="event.preventDefault();navigate('search?query=' + query.value)">
         <input
           type="text"
           placeholder="Search …"
           name="query"
-          class="form-control w-full"
-        />
+          class="form-control w-full" />
         <input
           type="submit"
           value="🔎"
@@ -31,8 +31,7 @@ import InlineScript from "../components/Script.astro";
             transition-opacity
             duration-300
             hover:opacity-100 hover:cursor-pointer
-          "
-        />
+          " />
       </form>
     </div>
 
@@ -50,14 +49,14 @@ import InlineScript from "../components/Script.astro";
           mx-auto
           rounded-full
           border-[1rem] border-t-[1rem] border-gray-600
-        "
-      ></div>
+        ">
+      </div>
     </div>
   </div>
-  
+
   <div class="populars invisible-content hidden p-8 pt-0">
     <PopularContents />
   </div>
-  
+
   <InlineScript filename="search" />
 </Layout>

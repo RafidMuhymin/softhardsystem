@@ -1,3 +1,5 @@
+const start = new Date();
+
 const fs = require("fs");
 const path = require("path");
 const csso = require("csso");
@@ -23,6 +25,8 @@ const getAllFiles = function (dirPath, arrayOfFiles) {
 
 const allFiles = getAllFiles("./dist");
 
+console.log(allFiles.length + " HTML files found");
+
 allFiles.forEach((file) => {
   const content = fs.readFileSync(file, "utf-8");
   const { document } = new JSDOM(content).window;
@@ -39,8 +43,14 @@ allFiles.forEach((file) => {
   );
 });
 
+console.log("Finished minifying CSS in ", new Date() - start, "ms");
+
 (async () => {
-  const fontBuffer = Buffer.from(
+  const wotfardBuffer = Buffer.from(
+    fs.readFileSync("public/fonts/wotfard-regular-webfont.woff2")
+  );
+
+  const pacificoBuffer = Buffer.from(
     fs.readFileSync("public/fonts/pacifico-v17-latin-regular.woff2")
   );
 
@@ -56,19 +66,25 @@ allFiles.forEach((file) => {
     });
   });
 
-  const fontSubsetBuffer = await subsetFont(fontBuffer, chars, {
+  const pacificoSubsetBuffer = await subsetFont(pacificoBuffer, chars, {
     targetFormat: "woff2",
   });
 
-  const base64Font =
-    "data:font/woff2;base64," + fontSubsetBuffer.toString("base64");
+  const wotfardBase64 =
+    "data:font/woff2;base64," + wotfardBuffer.toString("base64");
+
+  const pacificoBase64 =
+    "data:font/woff2;base64," + pacificoSubsetBuffer.toString("base64");
 
   allFiles.forEach((file) => {
     fs.writeFileSync(
       file,
       fs
         .readFileSync(file, "utf-8")
-        .replace("/fonts/pacifico-v17-latin-regular.woff2", base64Font)
+        .replace("/fonts/wotfard-regular-webfont.woff2", wotfardBase64)
+        .replace("/fonts/pacifico-v17-latin-regular.woff2", pacificoBase64)
     );
   });
 })();
+
+console.log("Finished subsetting fonts in ", new Date() - start, "ms");

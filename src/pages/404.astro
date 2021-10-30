@@ -5,7 +5,7 @@ import fetchWPData from "../data/data.js";
 import PopularContents from "../components/PopularContents.astro";
 ---
 
-<Layout title="Page Not Found">
+<Layout title="Page Not Found" noindex nofollow>
   <section class="nf p-8">
     <section class="max-w-3xl mx-auto text-center flex flex-col">
       <h1>Oops... It seems the page you requested does not exist!</h1>
@@ -20,14 +20,12 @@ import PopularContents from "../components/PopularContents.astro";
 
       <form
         class="relative mx-auto min-w-[50%]"
-        onsubmit="event.preventDefault();navigate('search?query=' + query.value)"
-      >
+        onsubmit="event.preventDefault();navigate('search?query=' + query.value)">
         <input
           type="text"
           placeholder="Search …"
           name="query"
-          class="form-control w-full"
-        />
+          class="form-control w-full" />
         <input
           type="submit"
           class="
@@ -41,8 +39,7 @@ import PopularContents from "../components/PopularContents.astro";
             duration-300
             hover:opacity-100 hover:cursor-pointer
           "
-          value="🔎"
-        />
+          value="🔎" />
       </form>
     </section>
 

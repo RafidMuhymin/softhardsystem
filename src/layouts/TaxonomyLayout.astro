@@ -14,7 +14,9 @@ const taxonomy = posts.filter((post) =>
 );
 ---
 
-<Layout title={`${tag ? "Tag" : "Category"} | ${name}`}>
+<Layout
+  title={`The ${name} ${tag ? "Tag" : "Category"} Archive`}
+  description={`The ${tag ? "Tag" : "Category"} Archive for the ${name} keyword of The Soft Hard System Blog`}>
   <div class="taxonomy max-w-2xl p-6 mx-auto">
     <h1 class="pacific flex flex-col items-center gap-2">
       {name}
