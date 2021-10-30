@@ -12,6 +12,8 @@ const {
   height = 224,
   alt = "Soft Hard System",
   article,
+  link,
+  meta,
 } = Astro.props;
 
 const url = Astro.request.canonicalURL.href;
@@ -53,7 +55,8 @@ const url = Astro.request.canonicalURL.href;
       creator: "@wafi_rafid",
     }}
     extend={{
-      meta: []
+      link,
+      meta
     }}
   />
 </head>

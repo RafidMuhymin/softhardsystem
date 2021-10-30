@@ -14,11 +14,13 @@ pre {
 }
 
 time {
-  font-weight: bold;
+  @apply font-bold;
 }
 
 strong {
-  position: relative;
+  span {
+    @apply min-w-min relative;
+  }
 }
 
 img {
