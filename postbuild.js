@@ -27,10 +27,15 @@ const allFiles = getAllFiles("./dist");
 
 console.log(allFiles.length + " HTML files found");
 
+let chars = "!";
+
 allFiles.forEach((file) => {
   const content = fs.readFileSync(file, "utf-8");
   const { document } = new JSDOM(content).window;
   const styleElement = document.querySelector("style");
+  document.querySelectorAll("em, .pacific").forEach((node) => {
+    chars += node.textContent;
+  });
   const { css } = csso.minify(styleElement.textContent, {
     restructure: true,
     forceMediaMerge: true,
@@ -49,18 +54,6 @@ console.log("Finished minifying CSS in", new Date() - start, "ms");
   const itimBuffer = Buffer.from(
     fs.readFileSync("public/fonts/itim-v5-latin-regular.woff2")
   );
-
-  let chars = "!";
-
-  const allFiles = getAllFiles("./dist");
-
-  allFiles.forEach((file) => {
-    const content = fs.readFileSync(file, "utf-8");
-    const { document } = new JSDOM(content).window;
-    document.querySelectorAll("em, .pacific").forEach((node) => {
-      chars += node.textContent;
-    });
-  });
 
   const itimSubsetBuffer = await subsetFont(itimBuffer, chars, {
     targetFormat: "woff2",
