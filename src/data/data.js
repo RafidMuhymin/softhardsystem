@@ -44,63 +44,67 @@ export default async function (returnLegalDocs) {
     global.posts = global.posts
       ? global.posts
       : await (async () => {
-          const posts = data.filter(
+          let posts = data.filter(
             ({ slug }) => slug !== "terms" && slug !== "privacy-policy"
           );
 
-          posts.forEach(async (post) => {
-            const dom = new JSDOM(post.content.rendered);
-            const { document } = dom.window;
+          posts = await Promise.all(
+            posts.map(async (post) => {
+              const dom = new JSDOM(post.content.rendered);
+              const { document } = dom.window;
 
-            const getFilename = async (href, hostname) => {
-              if (
-                hostname !== "localhost" &&
-                hostname !== "softhardsystem.com"
-              ) {
-                const filename = path.parse(href).base;
+              const getFilename = async (href, hostname) => {
+                if (
+                  hostname !== "localhost" &&
+                  hostname !== "softhardsystem.com"
+                ) {
+                  const filename = path.parse(href).base;
 
-                if (!fs.existsSync(`public/images/${filename}`)) {
-                  const image = await (await fetch(href)).blob();
-                  const buffer = Buffer.from(await image.arrayBuffer());
-                  fs.writeFileSync(`public/images/${filename}`, buffer);
+                  if (!fs.existsSync(`public/images/${filename}`)) {
+                    const image = await (await fetch(href)).blob();
+                    const buffer = Buffer.from(await image.arrayBuffer());
+                    fs.writeFileSync(`public/images/${filename}`, buffer);
+                  }
+                  return `/images/${filename}`;
                 }
-                return `/images/${filename}`;
-              }
-            };
+              };
 
-            const { href, hostname } = new URL(
-              post._embedded["wp:featuredmedia"][0].source_url
-            );
-            const featuredImageFilename = await getFilename(href, hostname);
-            post._embedded["wp:featuredmedia"][0].source_url =
-              featuredImageFilename;
+              const { href, hostname } = new URL(
+                post._embedded["wp:featuredmedia"][0].source_url
+              );
+              const featuredImageFilename = await getFilename(href, hostname);
+              post._embedded["wp:featuredmedia"][0].source_url =
+                featuredImageFilename;
 
-            console.log(post._embedded["wp:featuredmedia"][0].source_url);
+              console.log(post._embedded["wp:featuredmedia"][0].source_url);
 
-            Promise.all(
-              [...document.images].map(async (image) => {
-                const { href, hostname } = new URL(image.src);
-                const src = await getFilename(href, hostname);
-                image.src = src ? src : image.src;
-                image.srcset = (
-                  await Promise.all(
-                    image.srcset.split(" ").map(async (src) => {
-                      try {
-                        const { href, hostname } = new URL(src);
-                        const filename = await getFilename(href, hostname);
-                        console.log(filename);
-                        return filename ? filename : src;
-                      } catch (err) {
-                        return src;
-                      }
-                    })
-                  )
-                ).join(" ");
-              })
-            ).then(() => {
-              post.content.rendered = document.body.innerHTML;
-            });
-          });
+              await Promise.all(
+                [...document.images].map(async (image) => {
+                  const { href, hostname } = new URL(image.src);
+                  const src = await getFilename(href, hostname);
+                  image.src = src ? src : image.src;
+                  image.srcset = (
+                    await Promise.all(
+                      image.srcset.split(" ").map(async (src) => {
+                        try {
+                          const { href, hostname } = new URL(src);
+                          const filename = await getFilename(href, hostname);
+                          console.log(filename);
+                          return filename ? filename : src;
+                        } catch (err) {
+                          return src;
+                        }
+                      })
+                    )
+                  ).join(" ");
+                })
+              ).then(() => {
+                post.content.rendered = document.body.innerHTML;
+              });
+              return post;
+            })
+          );
+
           return posts;
         })();
     return global.posts;
