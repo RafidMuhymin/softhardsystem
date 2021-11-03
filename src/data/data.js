@@ -55,7 +55,7 @@ export default async function (returnLegalDocs) {
             const getFilename = async (href, hostname) => {
               if (
                 hostname !== "localhost" &&
-                hostname !== "softhardystem.com"
+                hostname !== "softhardsystem.com"
               ) {
                 const filename = path.parse(href).base;
 
@@ -74,6 +74,8 @@ export default async function (returnLegalDocs) {
             const featuredImageFilename = await getFilename(href, hostname);
             post._embedded["wp:featuredmedia"][0].source_url =
               featuredImageFilename;
+
+            console.log(post._embedded["wp:featuredmedia"][0].source_url);
 
             let itemsProcessed = 0;
 
@@ -102,6 +104,7 @@ export default async function (returnLegalDocs) {
               forEachFunction(image, () => {
                 itemsProcessed++;
                 if ((itemsProcessed = array.length)) {
+                  console.log("All body images have been localized");
                   post.content.rendered = document.body.innerHTML;
                 }
               });

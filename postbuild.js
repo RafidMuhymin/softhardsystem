@@ -43,7 +43,7 @@ allFiles.forEach((file) => {
   );
 });
 
-console.log("Finished minifying CSS in ", new Date() - start, "ms");
+console.log("Finished minifying CSS in", new Date() - start, "ms");
 
 (async () => {
   const wotfardBuffer = Buffer.from(
@@ -87,4 +87,4 @@ console.log("Finished minifying CSS in ", new Date() - start, "ms");
   });
 })();
 
-console.log("Finished subsetting fonts in ", new Date() - start, "ms");
+console.log("Finished subsetting fonts in", new Date() - start, "ms");
