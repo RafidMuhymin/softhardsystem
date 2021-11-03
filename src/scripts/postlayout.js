@@ -60,7 +60,7 @@ const postlayout = () => {
     });
   };
 
-  twinkle();
+  // twinkle();
 
   const commentSection = document.querySelector(".comment-section");
   const commentForm = document.querySelector(".comment-form");
