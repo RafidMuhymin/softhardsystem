@@ -35,7 +35,7 @@ const TOC = generateTOC(document);
   {width}
   {height}
   {alt}
-  link={[{ rel: "preload", href: image }]}
+  link={[{ rel: "preload", href: image, as: "image" }]}
   article={{ publishedTime: post.date, modifiedTime: post.modified, authors: ["https://www.facebook.com/rafidmuhyminwafi"], section: "Technology", tags: post._embedded["wp:term"][1].map(({ name }) => name) }}>
   <div
     slot="wave"

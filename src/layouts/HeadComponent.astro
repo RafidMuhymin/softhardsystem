@@ -55,8 +55,15 @@ const url = Astro.request.canonicalURL.href;
       creator: "@wafi_rafid",
     }}
     extend={{
-      link,
-      meta
+      link: [
+        {
+          rel: "preload",
+          href: "/fonts/itim-v5-latin-regular.woff2",
+          as: "font",
+          crossorigin: "anonymous",
+        },
+      ].concat(link),
+      meta,
     }}
   />
 </head>

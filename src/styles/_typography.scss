@@ -1,34 +1,24 @@
 @use "poly-fluid-sizing" as pfz;
 
+/* itim-regular - latin */
 @font-face {
-  font-family: "Wotfard";
+  font-family: "Itim";
   font-style: normal;
   font-weight: 400;
-  font-display: block;
-  src: url("/fonts/wotfard-regular-webfont.eot");
+  font-display: optional;
+  src: url("/fonts/itim-v5-latin-regular.eot"); /* IE9 Compat Modes */
   src: local(""),
-    url("/fonts/wotfard-regular-webfont.eot?#iefix") format("embedded-opentype"),
-    url("/fonts/wotfard-regular-webfont.woff2") format("woff2"),
-    url("/fonts/wotfard-regular-webfont.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Pacifico";
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url("/fonts/pacifico-v17-latin-regular.eot");
-  src: local(""),
-    url("/fonts/pacifico-v17-latin-regular.eot?#iefix")
-      format("embedded-opentype"),
-    url("/fonts/pacifico-v17-latin-regular.woff2") format("woff2"),
-    url("/fonts/pacifico-v17-latin-regular.woff") format("woff"),
-    url("/fonts/pacifico-v17-latin-regular.ttf") format("truetype"),
-    url("/fonts/pacifico-v17-latin-regular.svg#Pacifico") format("svg");
+    url("/fonts/itim-v5-latin-regular.eot?#iefix") format("embedded-opentype"),
+    /* IE6-IE8 */ url("/fonts/itim-v5-latin-regular.woff2") format("woff2"),
+    /* Super Modern Browsers */ url("/fonts/itim-v5-latin-regular.woff")
+      format("woff"),
+    /* Modern Browsers */ url("/fonts/itim-v5-latin-regular.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */ url("/fonts/itim-v5-latin-regular.svg#Itim")
+      format("svg"); /* Legacy iOS */
 }
 
 :root {
-  font-family: "Wotfard", system-ui, -apple-system, sans-serif;
   @include pfz.poly-fluid-sizing(
     "font-size",
     (
@@ -99,6 +89,6 @@ small {
 
 em,
 .pacific {
-  font-family: Pacifico, cursive;
+  font-family: "Comic Sans MS", Itim, ui-sans-serif, system-ui, sans-serif;
   color: crimson;
 }
