@@ -59,12 +59,7 @@ console.log("Finished minifying CSS in", new Date() - start, "ms");
     targetFormat: "woff2",
   });
 
-  console.log(itimSubsetBuffer.toString("utf8"));
-
-  fs.writeFileSync(
-    "dist/fonts/itim-v5-latin-regular.woff2",
-    itimSubsetBuffer.toString("utf8")
-  );
+  fs.writeFileSync("dist/fonts/itim-v5-latin-regular.woff2", itimSubsetBuffer);
 })();
 
 console.log("Finished subsetting fonts in", new Date() - start, "ms");
