@@ -77,37 +77,28 @@ export default async function (returnLegalDocs) {
 
             console.log(post._embedded["wp:featuredmedia"][0].source_url);
 
-            let itemsProcessed = 0;
-
-            const forEachFunction = async (image, callback) => {
-              const { href, hostname } = new URL(image.src);
-              const src = await getFilename(href, hostname);
-              image.src = src ? src : image.src;
-
-              image.srcset = (
-                await Promise.all(
-                  image.srcset.split(" ").map(async (src) => {
-                    try {
-                      const { href, hostname } = new URL(src);
-                      const filename = await getFilename(href, hostname);
-                      return filename ? filename : src;
-                    } catch (err) {
-                      return src;
-                    }
-                  })
-                )
-              ).join(" ");
-              callback();
-            };
-
-            [...document.images].forEach(async (image, index, array) => {
-              forEachFunction(image, () => {
-                itemsProcessed++;
-                if ((itemsProcessed = array.length)) {
-                  console.log("All body images have been localized");
-                  post.content.rendered = document.body.innerHTML;
-                }
-              });
+            Promise.all(
+              [...document.images].map(async (image) => {
+                const { href, hostname } = new URL(image.src);
+                const src = await getFilename(href, hostname);
+                image.src = src ? src : image.src;
+                image.srcset = (
+                  await Promise.all(
+                    image.srcset.split(" ").map(async (src) => {
+                      try {
+                        const { href, hostname } = new URL(src);
+                        const filename = await getFilename(href, hostname);
+                        console.log(filename);
+                        return filename ? filename : src;
+                      } catch (err) {
+                        return src;
+                      }
+                    })
+                  )
+                ).join(" ");
+              })
+            ).then(() => {
+              post.content.rendered = document.body.innerHTML;
             });
           });
           return posts;
