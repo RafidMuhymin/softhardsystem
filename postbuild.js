@@ -59,12 +59,12 @@ console.log("Finished minifying CSS in", new Date() - start, "ms");
     targetFormat: "woff2",
   });
 
-  const itimBase64 =
-    "data:font/woff2;base64," + itimSubsetBuffer.toString("base64");
+  console.log(itimSubsetBuffer.toString("utf8"));
 
-  console.log(itimBase64.length);
-
-  fs.writeFileSync("dist/fonts/itim-v5-latin-regular.woff2", itimBase64);
+  fs.writeFileSync(
+    "dist/fonts/itim-v5-latin-regular.woff2",
+    itimSubsetBuffer.toString("utf8")
+  );
 })();
 
 console.log("Finished subsetting fonts in", new Date() - start, "ms");
