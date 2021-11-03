@@ -13,6 +13,6 @@
   },
   "scripts": {
     "start": "astro dev --verbose",
-    "build": "astro build --verbose && node postbuild.js"
+    "build": "astro build --verbose"
   }
 }
