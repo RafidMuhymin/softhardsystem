@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import PopularContents from "../components/PopularContents.astro";
-import InlineScript from "../components/Script.astro";
+import AstroScript from "../components/AstroScript.astro";
 ---
 
 <Layout title="Search The Soft Hard System Blog" noindex nofollow>
@@ -58,5 +58,5 @@ import InlineScript from "../components/Script.astro";
     <PopularContents />
   </div>
 
-  <InlineScript filename="search" />
+  <AstroScript src={Astro.resolve("../scripts/search.js")} />
 </Layout>

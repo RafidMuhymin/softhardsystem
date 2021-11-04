@@ -23,6 +23,7 @@ export async function getStaticPaths({ rss }) {
     return {
       params: { slug: post.slug },
       props: {
+        isPost: posts.includes(post),
         post,
         prevNext: {
           prev: posts[posts.indexOf(post) + 1],
@@ -33,7 +34,7 @@ export async function getStaticPaths({ rss }) {
   });
 }
 
-const { post, prevNext } = Astro.props;
+const { isPost, post, prevNext } = Astro.props;
 const title = post.title.rendered;
 const content = post.content.rendered;
 
@@ -42,6 +43,6 @@ const { name: description } = post.head_tags.find(
 ).attributes;
 ---
 
-{global.posts.includes(post) ? <PostLayout title={title} post={post} prevNext={prevNext} description={description} /> : <Layout title={title} description={description}>
+{isPost ? <PostLayout title={title} post={post} prevNext={prevNext} description={description} /> : <Layout title={title} description={description}>
     <div class="p-12">{content}</div>
   </Layout>}

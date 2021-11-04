@@ -3,7 +3,7 @@ import { Spa } from "astro-spa";
 import HeadComponent from "./HeadComponent.astro";
 import Header from "./Header.astro";
 import Footer from "./Footer.astro";
-import InlineScript from "../components/Script.astro";
+import AstroScript from "../components/AstroScript.astro";
 ---
 
 <!DOCTYPE html>
@@ -23,6 +23,7 @@ import InlineScript from "../components/Script.astro";
     </main>
     <Footer />
     <Spa containerSelector="#root" />
-    <InlineScript filename="layout" />
+    <AstroScript src={Astro.resolve("../scripts/layout.js")} />
+    <AstroScript src="/layout.js" />
   </body>
 </html>

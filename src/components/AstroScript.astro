@@ -1,0 +1,32 @@
+---
+import { minify as terse } from "terser";
+import fs from "node:fs";
+import path from "node:path";
+
+const { src, inline, minify } = Astro.props;
+
+if (!src.startsWith("/")) {
+  throw new Error(
+    "The src Prop must start with '/' and your JS files must be inside the root public folder or resolved with Astro.resolve"
+  );
+}
+
+let js;
+
+if (import.meta.env.NODE_ENV === "production") {
+  const filepath = src.startsWith("/_astro/")
+    ? src.replace("/_astro/", "")
+    : "public" + src;
+  js = (await terse(fs.readFileSync(filepath, "utf8"))).code;
+}
+---
+
+<!-- prettier-ignore -->
+
+{
+  import.meta.env.NODE_ENV === "development" ? (
+    <script src={src}></script>
+  ) : (
+    `<script>${js}</script>`
+  )
+}
