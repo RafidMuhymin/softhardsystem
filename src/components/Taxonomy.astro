@@ -4,10 +4,8 @@ const { term, array } = Astro.props;
 
 <span class="inline-block">
   {term === "tag" ? "Tagged" : "Categorized"} as :{" "}
-  {array.map((t, i) => (
-    <a href={`/${term}/${t.slug}`}>
-      {t.name}
-      {i === array.length - 1 ? "" : ", "}
-    </a>
-  ))}
+  {array.map( (t, i) => <a href={`/${term === "category" ? "topic" : term}/${t.slug}`}>
+        {t.name}
+        {i === array.length - 1 ? "" : ", "}
+      </a> )}
 </span>

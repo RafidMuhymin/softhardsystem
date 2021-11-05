@@ -1,32 +1,85 @@
 ---
-import { minify as terse } from "terser";
+import { minify as terse, MinifyOptions } from "terser";
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 
-const { src, inline, minify } = Astro.props;
+console.log(Astro.slots.default);
 
-if (!src.startsWith("/")) {
+export interface Optionals {
+  inline?: boolean;
+  minify?: boolean;
+  minifyOptions?: MinifyOptions;
+  dev?: boolean;
+}
+
+export interface InlineScript extends Optionals {
+  src: string;
+  javascript?: never;
+}
+
+export interface ExternalScript extends Optionals {
+  javascript: string;
+  src?: never;
+}
+
+const {
+  src,
+  inline = true,
+  minify = true,
+  minifyOptions,
+  dev = false,
+  javascript,
+} = Astro.props as InlineScript | ExternalScript;
+
+if (!src) {
+  throw new Error("The src Prop can't be empty!");
+} else if (!src.startsWith("/")) {
   throw new Error(
-    "The src Prop must start with '/' and your JS files must be inside the root public folder or resolved with Astro.resolve"
+    "The src Prop must start with '/' and your JS files must be inside the public folder or resolved with Astro.resolve!"
+  );
+} else if (path.extname(src) !== ".js") {
+  throw new Error("The src Prop must be a JS file!");
+} else if (src && javascript) {
+  console.warn(
+    "WARNING: The javascript Prop is ignored when the src Prop is present"
   );
 }
 
-let js;
+let script: string;
 
 if (import.meta.env.NODE_ENV === "production") {
   const filepath = src.startsWith("/_astro/")
     ? src.replace("/_astro/", "")
     : "public" + src;
-  js = (await terse(fs.readFileSync(filepath, "utf8"))).code;
+  script = fs.readFileSync(filepath, "utf8");
+  script = minify ? await terse.minify(script).code : script;
+  if (inline) {
+    script = `<sscriptipt>${script}</sscriptipt>`;
+  } else {
+    const publicPath = "public";
+    const astroScriptDir = `${publicPath}/astro-script`;
+    const hash = crypto
+      .createHash("sha256")
+      .update(script)
+      .digest("hex")
+      .substr(0, 8);
+    fs.existsSync(astroScriptDir) || fs.mkdirSync(astroScriptDir);
+    fs.writeFileSync(
+      `${astroScriptDir}/${path.basename(src, ".js")}-${hash}${path.extname(
+        src
+      )}`,
+      script
+    );
+    script = `<script src="/astro-script/${path.basename(src)}"></script>`;
+  }
+  script = (await terse(fs.readFileSync(filepath, "utf8"), minifyOptions)).code;
 }
 ---
 
-<!-- prettier-ignore -->
+{import.meta.env.NODE_ENV === "development" ? dev ? script : <script src={src}></script> : script}
 
-{
-  import.meta.env.NODE_ENV === "development" ? (
-    <script src={src}></script>
-  ) : (
-    `<script>${js}</script>`
-  )
-}
+{Astro.slots.default ? (async () => {
+      console.log(await (<slot />));
+      return <slot />;
+    })() : ""}

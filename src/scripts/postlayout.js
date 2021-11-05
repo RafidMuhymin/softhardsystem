@@ -1,4 +1,4 @@
-window.postlayout ??= () => {
+(() => {
   const store = [];
   [...document.querySelectorAll(".content strong")]
     .filter((strong) => strong.firstElementChild?.nodeName !== "EM")
@@ -311,10 +311,4 @@ window.postlayout ??= () => {
     commentSection.classList.remove("reply-section");
     commentForm.reset();
   };
-};
-
-window.onload = postlayout;
-window.onMount = () => {
-  postlayout();
-  scan();
-};
+})();

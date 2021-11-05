@@ -23,7 +23,11 @@ import AstroScript from "../components/AstroScript.astro";
     </main>
     <Footer />
     <Spa containerSelector="#root" />
-    <AstroScript src={Astro.resolve("../scripts/layout.js")} />
-    <AstroScript src="/layout.js" />
+    <AstroScript
+      src={Astro.resolve("../scripts/layout.js")}
+      minifyOptions={{ dev: true }}>
+      <script>const data = "astro-script";</script>
+    </AstroScript>
+    <AstroScript src="/layout.js" javascript="const data = 'faka'" />
   </body>
 </html>

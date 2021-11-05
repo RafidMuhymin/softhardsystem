@@ -20,10 +20,10 @@ document.getElementById("menubar").onclick = () => {
   }
 };
 
-window.matchMedia("(min-width : 768px)").addEventListener("change", (e) => {
+window.matchMedia("(min-width : 768px)").onchange = (e) => {
   e.matches &&
     ((checkbox.checked = false), (document.body.style.overflow = "auto"));
-});
+};
 
 window.onNavigate = () => {
   checkbox.checked = false;
