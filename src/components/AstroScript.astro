@@ -3,24 +3,16 @@ import { minify as terse, MinifyOptions } from "terser";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import { createRequire } from "node:module";
+const moduleRequire = createRequire(import.meta.url);
+const { JSDOM } = moduleRequire("jsdom");
 
-console.log(Astro.slots.default);
-
-export interface Optionals {
+export interface Props {
+  src?: string | string[];
   inline?: boolean;
   minify?: boolean;
   minifyOptions?: MinifyOptions;
-  dev?: boolean;
-}
-
-export interface InlineScript extends Optionals {
-  src: string;
-  javascript?: never;
-}
-
-export interface ExternalScript extends Optionals {
-  javascript: string;
-  src?: never;
+  publicPath?: string;
 }
 
 const {
@@ -28,58 +20,79 @@ const {
   inline = true,
   minify = true,
   minifyOptions,
-  dev = false,
-  javascript,
-} = Astro.props as InlineScript | ExternalScript;
+  publicPath = "public",
+} = Astro.props as Props;
 
-if (!src) {
-  throw new Error("The src Prop can't be empty!");
-} else if (!src.startsWith("/")) {
+const slot = Astro.slots.default;
+let script = "";
+
+const sources = Array.isArray(src) ? src : [src];
+
+if (!(src || slot)) {
   throw new Error(
-    "The src Prop must start with '/' and your JS files must be inside the public folder or resolved with Astro.resolve!"
-  );
-} else if (path.extname(src) !== ".js") {
-  throw new Error("The src Prop must be a JS file!");
-} else if (src && javascript) {
-  console.warn(
-    "WARNING: The javascript Prop is ignored when the src Prop is present"
+    "The src Prop can't be empty when no child script is passed!"
   );
 }
 
-let script: string;
+if (!slot) {
+  sources.forEach((src) => {
+    if (!src.startsWith("/")) {
+      throw new Error(
+        "The src Prop must start with '/' and your JS files must be inside the public folder or resolved with Astro.resolve!"
+      );
+    }
+    if (path.extname(src) !== ".js") {
+      throw new Error("The src Prop must be a JS file!");
+    }
+  });
 
-if (import.meta.env.NODE_ENV === "production") {
-  const filepath = src.startsWith("/_astro/")
-    ? src.replace("/_astro/", "")
-    : "public" + src;
-  script = fs.readFileSync(filepath, "utf8");
-  script = minify ? await terse.minify(script).code : script;
+  sources.forEach((src) => {
+    const filepath = src.startsWith("/_astro/")
+      ? src.replace("/_astro/", "")
+      : "public" + src;
+    script += fs.readFileSync(filepath, "utf8");
+  });
+
+  script = minify ? (await terse(script, minifyOptions)).code : script;
+
   if (inline) {
-    script = `<sscriptipt>${script}</sscriptipt>`;
+    script = `<script>${script}</script>`;
   } else {
-    const publicPath = "public";
-    const astroScriptDir = `${publicPath}/astro-script`;
+    const dir = `${publicPath}/astro-script`;
     const hash = crypto
       .createHash("sha256")
       .update(script)
       .digest("hex")
       .substr(0, 8);
-    fs.existsSync(astroScriptDir) || fs.mkdirSync(astroScriptDir);
-    fs.writeFileSync(
-      `${astroScriptDir}/${path.basename(src, ".js")}-${hash}${path.extname(
-        src
-      )}`,
-      script
-    );
-    script = `<script src="/astro-script/${path.basename(src)}"></script>`;
+    fs.existsSync(dir) || fs.mkdirSync(dir);
+    fs.writeFileSync(`${dir}/${hash}.js`, script);
+    script = `<script src="/astro-script/${hash}.js"></script>`;
   }
-  script = (await terse(fs.readFileSync(filepath, "utf8"), minifyOptions)).code;
+}
+
+if (src && slot) {
+  console.warn(
+    "WARNING: Inlined scripts are ignored when the src Prop is present"
+  );
 }
 ---
 
-{import.meta.env.NODE_ENV === "development" ? dev ? script : <script src={src}></script> : script}
+<!-- prettier-ignore -->
 
-{Astro.slots.default ? (async () => {
-      console.log(await (<slot />));
-      return <slot />;
-    })() : ""}
+{
+  src ? (
+    script
+  ) : slot ? (
+    (async () => {
+      let script = "";
+      const { document } = new JSDOM(await (<slot />)).window;
+      script =
+        document.querySelector("script")?.textContent ||
+        document.body.textContent;
+      script = minify ? (await terse(script)).code : script;
+      return `<script>${script}</script>`;
+    })()
+  ) : (
+    ""
+  )
+}
