@@ -1,6 +1,7 @@
 ---
 import { minify as terse, MinifyOptions } from "terser";
 import fs from "node:fs";
+import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 import { createRequire } from "node:module";
@@ -26,7 +27,6 @@ const {
 } = Astro.props as Props;
 
 const slot = Astro.slots.default;
-let script = "";
 
 const sources = Array.isArray(src) ? src : [src];
 
@@ -36,51 +36,55 @@ if (!(src || slot)) {
   );
 }
 
-if (!slot) {
-  sources.forEach((src) => {
-    if (!src.startsWith("/")) {
-      throw new Error(
-        "The src Prop must start with '/' and your JS files must be inside the public folder or resolved with Astro.resolve!"
-      );
-    }
-    if (path.extname(src) !== ".js") {
-      throw new Error("The src Prop must be a JS file!");
-    }
-  });
+const script = await (async () => {
+  if (!slot) {
+    sources.forEach((src) => {
+      if (!src.startsWith("/")) {
+        throw new Error(
+          "The src Prop must start with '/' and your JS files must be inside the public folder or resolved with Astro.resolve!"
+        );
+      }
+      if (path.extname(src) !== ".js") {
+        throw new Error("The src Prop must be a JS file!");
+      }
+    });
 
-  if (dev) {
-    script = (
-      await Promise.all(
-        sources.map(async (src) => {
-          if (src.startsWith("http://") || src.startsWith("https://")) {
-            return await (await fetch(src)).text();
-          } else {
-            const filepath = src.startsWith("/_astro/")
-              ? src.replace("/_astro/", "")
-              : "public" + src;
-            return fs.readFileSync(filepath, "utf8");
-          }
-        })
-      )
-    ).join("\n");
+    if (dev) {
+      let script = "";
+      script = (
+        await Promise.all(
+          sources.map(async (src) => {
+            if (src.startsWith("http://") || src.startsWith("https://")) {
+              return await (await fetch(src)).text();
+            } else {
+              const filepath = src.startsWith("/_astro/")
+                ? src.replace("/_astro/", "")
+                : "public" + src;
+              return fs.readFileSync(filepath, "utf8");
+            }
+          })
+        )
+      ).join("\n");
 
-    script = minify ? (await terse(script, minifyOptions)).code : script;
+      script = minify ? (await terse(script, minifyOptions)).code : script;
 
-    if (inline) {
-      script = `<script>${script}</script>`;
-    } else {
-      const dir = `${publicPath}/astro-script`;
-      const hash = crypto
-        .createHash("sha256")
-        .update(script)
-        .digest("hex")
-        .substr(0, 8);
-      fs.existsSync(dir) || fs.mkdirSync(dir);
-      fs.writeFileSync(`${dir}/${hash}.js`, script);
-      script = `<script src="/astro-script/${hash}.js"></script>`;
+      if (inline) {
+        return `<script>${script}</script>`;
+      } else {
+        const dir = `${publicPath}/astro-script`;
+        const hash = crypto
+          .createHash("sha256")
+          .update(script)
+          .digest("hex")
+          .substr(0, 8);
+        fs.existsSync(dir) || fs.mkdirSync(dir);
+        return writeFile(`${dir}/${hash}.js`, script).then(
+          () => `<script src="/astro-script/${hash}.js"></script>`
+        );
+      }
     }
   }
-}
+})();
 
 if (src && slot) {
   console.warn(
