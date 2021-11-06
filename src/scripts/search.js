@@ -36,22 +36,22 @@
         const { source_url, alt_text } = post._embedded["wp:featuredmedia"][0];
         const imageURL = source_url.slice(source_url.lastIndexOf("/"));
         return `
-              <div class="result">
-                <a href="/${slug}">
-                    <img loading="lazy" src="images${imageURL}" alt="${alt_text}" />
-                </a>
-                <div>
-                    <h2>
-                        <a href="/${slug}">${title.rendered}</a>
-                    </h2>
-                    <p>${uagb_excerpt.slice(0, -8)}</p>
-                    <a href="/${slug}" class="pushable">
-                        <span class="shadow"></span>
-                        <span class="edge"></span>
-                        <span class="front">Leave a Reply ➜</span>
-                    </a>
-                </div>
-              </div>`;
+          <div class="result">
+            <a href="/${slug}">
+              <img loading="lazy" src="images${imageURL}" alt="${alt_text}" />
+            </a>
+            <div>
+              <h2>
+                <a href="/${slug}">${title.rendered}</a>
+              </h2>
+              <p>${uagb_excerpt.slice(0, -8)}</p>
+              <a href="/${slug}" class="pushable">
+                <span class="shadow"></span>
+                <span class="edge"></span>
+                <span class="front">Leave a Reply ➜</span>
+              </a>
+            </div>
+          </div>`;
       })
       .join("")
   );

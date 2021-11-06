@@ -1,3 +1,5 @@
+console.log("layout.js loaded");
+
 document.getElementById("menubar").onclick = () => {
   const form = document.querySelector("#header > div form");
   const navlinks = document.querySelectorAll("#header > div nav a");
@@ -20,10 +22,10 @@ document.getElementById("menubar").onclick = () => {
   }
 };
 
-window.matchMedia("(min-width : 768px)").addEventListener("change", (e) => {
+window.matchMedia("(min-width : 768px)").onchange = (e) => {
   e.matches &&
     ((checkbox.checked = false), (document.body.style.overflow = "auto"));
-});
+};
 
 window.onNavigate = () => {
   checkbox.checked = false;
