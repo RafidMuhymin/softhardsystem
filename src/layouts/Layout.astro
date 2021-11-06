@@ -23,13 +23,6 @@ import AstroScript from "../components/AstroScript.astro";
     </main>
     <Footer />
     <Spa containerSelector="#root" />
-    <AstroScript
-      src={Astro.resolve("../scripts/layout.js")}
-      dev={true}
-      inline={true} />
-    <AstroScript>
-      <script>const data = "astro-script";</script>
-      <script>const data = "astro-script";</script>
-    </AstroScript>
+    <AstroScript src={Astro.resolve("../scripts/layout.js")} />
   </body>
 </html>
