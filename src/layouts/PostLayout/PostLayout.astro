@@ -1,4 +1,5 @@
 ---
+import { AstroScript } from "astro-script";
 import Layout from "../Layout.astro";
 import PrevNext from "./PrevNext.astro";
 import Author from "./Author.astro";
@@ -8,7 +9,6 @@ import Comments from "./Comments.astro";
 import generateTOC from "./generateTOC.js";
 import Time from "../../components/Time.astro";
 import Taxonomy from "../../components/Taxonomy.astro";
-import AstroScript from "../../components/AstroScript.astro";
 
 import { createRequire } from "node:module";
 const moduleRequire = createRequire(import.meta.url);

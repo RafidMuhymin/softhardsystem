@@ -1083,6 +1083,11 @@ astring@^1.7.4:
   resolved "https://registry.yarnpkg.com/astring/-/astring-1.7.5.tgz#a7d47fceaf32b052d33a3d07c511efeec67447ca"
   integrity sha512-lobf6RWXb8c4uZ7Mdq0U12efYmpD1UFnyOWVJPTa3ukqZrMopav+2hdNu0hgBF0JIBFK9QgrBDfwYvh3DFJDAA==
 
+astro-script@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/astro-script/-/astro-script-0.1.0.tgz#b1e4d2daa5ce984b2dda44638494ce1074f80fee"
+  integrity sha512-L1De/95HVKHehA9vZs83TkBqrGhzzTeKQSWWTmGrmcwUoF3e1LCgFm4pkezsgukCKZJhABBIxyRB0CjcUVzLig==
+
 astro-seo@^0.3.13:
   version "0.3.14"
   resolved "https://registry.yarnpkg.com/astro-seo/-/astro-seo-0.3.14.tgz#eac683fe8ecacaeb0450b027afd591b426582973"
