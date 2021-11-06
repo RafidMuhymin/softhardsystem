@@ -75,11 +75,11 @@ const TOC = generateTOC(document);
     </section>
   </div>
 
-  <AstroScript src={Astro.resolve("../../scripts/postlayout.js")} />
-
   <section class="non-content max-w-3xl mx-auto p-8 pt-0">
     <Author author={post._embedded.author[0]} />
     <CommentForm id={post.id} />
     <Comments />
   </section>
+
+  <AstroScript src={Astro.resolve("../../scripts/postlayout.js")} />
 </Layout>
