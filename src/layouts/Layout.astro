@@ -1,6 +1,6 @@
 ---
-import { Spa } from "astro-spa";
-import { AstroScript } from "astro-script";
+import Spa from "../astro-spa/Spa.astro";
+import AstroScript from "../components/AstroScript.astro";
 import HeadComponent from "./HeadComponent.astro";
 import Header from "./Header.astro";
 import Footer from "./Footer.astro";
@@ -22,7 +22,9 @@ import Footer from "./Footer.astro";
       </div>
     </main>
     <Footer />
-    <Spa containerSelector="#root" />
+    <Spa
+      containerSelector="#root"
+      analytics={{ trackingID: "UA-168566594-2" }} />
     <AstroScript src={Astro.resolve("../scripts/layout.js")} />
   </body>
 </html>

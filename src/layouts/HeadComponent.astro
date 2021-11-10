@@ -15,8 +15,6 @@ const {
   link,
   meta,
 } = Astro.props;
-
-const url = Astro.request.canonicalURL.href;
 ---
 
 <head lang="en-US">
@@ -37,8 +35,7 @@ const url = Astro.request.canonicalURL.href;
       basic: {
         title,
         type,
-        image: Astro.site.href.slice(0, -1) + image,
-        url
+        image: Astro.site.href.slice(0, -1) + image
       },
       optional: {
         description

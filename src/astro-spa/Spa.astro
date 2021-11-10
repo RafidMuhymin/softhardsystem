@@ -1,0 +1,126 @@
+---
+import fs from "node:fs";
+import crypto from "node:crypto";
+import { minify } from "terser";
+import buildScript from "./script.js";
+
+export interface scrollIntoViewOptions {
+  behavior?: "smooth" | "auto";
+  block?: "start" | "center" | "end" | "nearest";
+  inline?: "start" | "center" | "end" | "nearest";
+}
+
+export interface Props {
+  analytics: {
+    trackingID: string;
+    anonymizeIP?: boolean;
+    colorDepth?: boolean;
+    characterSet?: boolean;
+    screenSize?: boolean;
+    language?: boolean;
+  };
+  attributes: Partial<HTMLScriptElement>;
+  cache: boolean;
+  containerSelector: string;
+  defaultAnimation: boolean;
+  delay: number;
+  external: boolean;
+  forceRequestIdleCallback: boolean;
+  highPriorityPrefetch: boolean;
+  ignores: string[];
+  limit: number;
+  localLinkDetector: boolean;
+  PPBColor: string;
+  prefetch: boolean;
+  prefetchUpgradation: boolean;
+  progressBar: boolean;
+  root: string;
+  rootMargin: string;
+  scanOnMount: boolean;
+  scrollIntoView: boolean;
+  scrollIntoViewOptions: boolean | scrollIntoViewOptions;
+  secondaryProgressBar: boolean;
+  SPBColor: string;
+  threshold: number;
+  timeout: number | false;
+}
+
+const {
+  analytics,
+  attributes,
+  cache = true,
+  containerSelector = "",
+  defaultAnimation = true,
+  delay = 500,
+  external = false,
+  forceRequestIdleCallback = false,
+  highPriorityPrefetch = false,
+  ignores = [],
+  limit = 0,
+  localLinkDetector = true,
+  PPBColor = "#42b3f5",
+  prefetch = true,
+  prefetchUpgradation = true,
+  progressBar = true,
+  root = "",
+  rootMargin = "",
+  scanOnMount = true,
+  scrollIntoView = true,
+  scrollIntoViewOptions = { behavior: "smooth" },
+  secondaryProgressBar = false,
+  SPBColor = "#4248f5",
+  threshold = 0.25,
+  timeout = 2000,
+} = Astro.props as Partial<Props>;
+
+const scriptContent = buildScript(
+  analytics,
+  cache,
+  containerSelector,
+  defaultAnimation,
+  delay,
+  forceRequestIdleCallback,
+  highPriorityPrefetch,
+  ignores,
+  limit,
+  localLinkDetector,
+  PPBColor,
+  prefetch,
+  prefetchUpgradation,
+  progressBar,
+  root,
+  rootMargin,
+  scanOnMount,
+  scrollIntoView,
+  scrollIntoViewOptions,
+  secondaryProgressBar,
+  SPBColor,
+  threshold,
+  timeout
+);
+
+const { code } = await minify(scriptContent);
+
+fs.existsSync("public") || fs.mkdirSync("public");
+
+const path = `public/astro-spa-${crypto
+  .createHash("sha256")
+  .update(code)
+  .digest("hex")
+  .substr(0, 8)}.js`;
+
+if (external) {
+  fs.readFileSync(path, "utf8") === code || fs.writeFileSync(path, code);
+}
+
+const keys = Object.keys(attributes || {});
+const values = Object.values(attributes || {});
+const htmlAttributes = keys
+  .map(
+    (key, i) =>
+      `${key}${typeof values[i] === "boolean" ? "" : `="${values[i]}"`}`
+  )
+  .join(" ");
+---
+
+{external ? <script {...attributes} src={path.substr(6)}></script> : `<script ${htmlAttributes ? htmlAttributes : ""}>${code}</script>`}

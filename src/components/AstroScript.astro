@@ -1,10 +1,11 @@
 ---
-import { minify as terse, MinifyOptions } from "terser";
+import { minify as terse } from "terser";
 import fs from "node:fs";
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 import { createRequire } from "node:module";
+
 const moduleRequire = createRequire(import.meta.url);
 const { JSDOM } = moduleRequire("jsdom");
 
@@ -12,7 +13,7 @@ export interface Props {
   src?: string | string[];
   inline?: boolean;
   minify?: boolean;
-  minifyOptions?: MinifyOptions;
+  minifyOptions?: object;
   publicPath?: string;
   dev?: boolean;
 }
@@ -21,7 +22,7 @@ const {
   src,
   inline = true,
   minify = true,
-  minifyOptions,
+  minifyOptions = {},
   publicPath = "public",
   dev = import.meta.env.NODE_ENV !== "development",
 } = Astro.props as Props;
@@ -77,10 +78,23 @@ const script = await (async () => {
           .update(script)
           .digest("hex")
           .substr(0, 8);
+        const srciptSrc = `<script src="/astro-script/${hash}.js"></script>`;
         fs.existsSync(dir) || fs.mkdirSync(dir);
-        return writeFile(`${dir}/${hash}.js`, script).then(
-          () => `<script src="/astro-script/${hash}.js"></script>`
-        );
+        return readFile(`${dir}/${hash}.js`, "utf8")
+          .then((str) => {
+            if (str !== script) {
+              writeFile(`${dir}/${hash}.js`, script).then(() => {
+                return srciptSrc;
+              });
+            } else {
+              return srciptSrc;
+            }
+          })
+          .catch((err) => {
+            writeFile(`${dir}/${hash}.js`, script).then(() => {
+              return srciptSrc;
+            });
+          });
       }
     }
   }

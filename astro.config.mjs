@@ -12,11 +12,4 @@ export default {
     port: 8000,
     tailwindConfig: "./tailwind.config.js",
   },
-
-  renderers: [
-    "@astrojs/renderer-svelte",
-    "@astrojs/renderer-vue",
-    "@astrojs/renderer-react",
-    "@astrojs/renderer-preact",
-  ],
 };

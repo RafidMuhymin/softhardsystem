@@ -29,7 +29,3 @@ window.onNavigate = () => {
   checkbox.checked = false;
   document.body.style.overflow = "auto";
 };
-
-window.onMount = () => {
-  scan();
-};
