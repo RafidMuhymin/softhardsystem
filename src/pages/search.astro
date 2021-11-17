@@ -12,7 +12,7 @@ import PopularContents from "../components/PopularContents.astro";
       </h1>
       <form
         class="relative mx-auto min-w-[50%]"
-        onsubmit="event.preventDefault();navigate('search?query=' + query.value)">
+        onsubmit="event.preventDefault();spa.navigate('search?query=' + query.value)">
         <input
           type="text"
           placeholder="Search …"

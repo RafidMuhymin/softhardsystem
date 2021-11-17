@@ -44,10 +44,11 @@ You can then import the component like this:
 
 ```astro
 ---
-import { Spa } from 'astro-spa'
+import { Spa } from "astro-spa";
 // or import Spa from 'astro-spa/Spa.astro'
 ---
-<Spa/>
+
+<Spa />
 ```
 
 And that's it, you're now ready to go!

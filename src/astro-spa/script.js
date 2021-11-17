@@ -1,4 +1,4 @@
-import analyticsFunction from "./analytics";
+import buildAnalytics from "./analytics";
 import constructPage from "./constructPage";
 import observe from "./observe";
 import observer from "./observer";
@@ -17,29 +17,27 @@ export default function (
   ignores,
   limit,
   localLinkDetector,
-  PPBColor,
   prefetch,
   prefetchUpgradation,
   progressBar,
+  progressBarOptions,
   root,
   rootMargin,
   scanOnMount,
   scrollIntoView,
   scrollIntoViewOptions,
-  secondaryProgressBar,
-  SPBColor,
   threshold,
   timeout
 ) {
   const timeoutString =
     typeof timeout === "number" ? `, { timeout: ${timeout} }` : "";
   return `
-  ((w, d, l) => {
-    const AstroSpa = w.spa ||= {};
+  ((window, document, location) => {
+    const AstroSpa = window.spa ||= {};
     ${
       localLinkDetector
         ? `const styleLocalLink = () => {
-            d.querySelectorAll("[data-active-class]").forEach((element) => {
+            document.querySelectorAll("[data-active-class]").forEach((element) => {
               element.classList.remove("active");
               element.href === document.URL && element.classList.add(element.getAttribute("data-active-class"));
             });
@@ -83,17 +81,15 @@ export default function (
           containerSelector,
           defaultAnimation,
           localLinkDetector,
-          PPBColor,
           progressBar,
+          progressBarOptions,
           scanOnMount,
           scrollIntoView,
-          scrollIntoViewOptions,
-          secondaryProgressBar,
-          SPBColor
+          scrollIntoViewOptions
         )
       }
 
-      w.addEventListener("popstate", () => { l.hash || constructPage(); });
+      window.addEventListener("popstate", () => { location.hash || constructPage(); });
 
       ${
         navigate() +
@@ -102,7 +98,7 @@ export default function (
         observe(cache, highPriorityPrefetch, prefetch, prefetchUpgradation)
       }
       AstroSpa.scan();
-      ${analyticsFunction(analytics)}
+      ${buildAnalytics(analytics)}
     };
     requestIdleCallback${
       forceRequestIdleCallback

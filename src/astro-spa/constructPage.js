@@ -6,36 +6,34 @@ export default function (
   containerSelector,
   defaultAnimation,
   localLinkDetector,
-  PPBColor,
   progressBar,
+  progressBarOptions,
   scanOnMount,
   scrollIntoView,
-  scrollIntoViewOptions,
-  secondaryProgressBar,
-  SPBColor
+  scrollIntoViewOptions
 ) {
   const buildPage = `${
     containerSelector
       ? `const newContent = doc.querySelector("${containerSelector}");
       ${
         scrollIntoView
-          ? `const container = d.querySelector("${containerSelector}");
+          ? `const container = document.querySelector("${containerSelector}");
       container.replaceWith(newContent);
       newContent.scrollIntoView(${JSON.stringify(scrollIntoViewOptions)});`
           : ""
       }
-      d.head.replaceWith(doc.head);
+      document.head.replaceWith(doc.head);
       ${localLinkDetector ? "styleLocalLink();" : ""}`
-      : "d.documentElement.replaceWith(doc.documentElement);"
+      : "document.documentElement.replaceWith(doc.documentElement);"
   }
     [
-      ...d.${
+      ...document.${
         containerSelector
           ? `querySelectorAll("head script, ${containerSelector} script")`
           : "scripts"
       }
     ].forEach((script) => {
-      const newScript = d.createElement("script");
+      const newScript = document.createElement("script");
       newScript.text = script.text;
       for (const attr of script.attributes) {
         newScript.setAttribute(attr.name, attr.value);
@@ -45,12 +43,14 @@ export default function (
 
     ${scanOnMount ? "AstroSpa.scan();" : ""}
     ${analytics ? "AstroSpa.track();" : ""}
-    w.dispatchEvent(new Event("mount"));
-    w.onMount && w.onMount();
+    window.dispatchEvent(new Event("mount"));
+    window.onMount && window.onMount();
 
     ${
       defaultAnimation
-        ? `${containerSelector ? "newContent" : "d.documentElement"}.animate(
+        ? `${
+            containerSelector ? "newContent" : "document.documentElement"
+          }.animate(
         {
         opacity: [0, 1],
         },
@@ -60,17 +60,17 @@ export default function (
     }`;
 
   return `const constructPage = async () => {
-    w.dispatchEvent(new Event("navigate"));
-    w.onNavigate && w.onNavigate();
+    window.dispatchEvent(new Event("navigate"));
+    window.onNavigate && window.onNavigate();
 
-    ${buildProgressBar(PPBColor, progressBar, secondaryProgressBar, SPBColor)}
+    ${buildProgressBar(progressBar, progressBarOptions)}
 
     const cachedPage = ${
       cache
-        ? `(await cache.match(l.href)) ||
-            (await (cachePage(l.href))) ||
-            (await cache.match(l.href));`
-        : "(await fetch(l.href));"
+        ? `(await cache.match(location.href)) ||
+            (await (cachePage(location.href))) ||
+            (await cache.match(location.href));`
+        : "(await fetch(location.href));"
     }
 
     const html = await cachedPage.text();
@@ -78,21 +78,17 @@ export default function (
 
     ${
       progressBar
-        ? `clearInterval(intervalID);
-        progressBar.animate({ width: [pbw + "vw", "100vw"] }, 100).onfinish =
-        () => {
-            ${containerSelector ? "progressBar.remove();" : ""}
-            ${buildPage}
-        };`
-        : secondaryProgressBar
-        ? `clearInterval(intervalID);
-          ${
-            containerSelector
-              ? "progressBar.remove();bgProgressBar.remove();"
-              : ""
-          }
-          ${buildPage};`
-        : buildPage
+        ? progressBarOptions?.secondary
+          ? `clearInterval(intervalID);
+      ${containerSelector ? "progressBar.remove();bgProgressBar.remove();" : ""}
+      ${buildPage}`
+          : `clearInterval(intervalID);
+      progressBar.animate({ width: [pbw + "vw", "100vw"] }, 100).onfinish =
+      () => {
+          ${containerSelector ? "progressBar.remove();" : ""}
+          ${buildPage}
+      };`
+        : ""
     }
     };`;
 }

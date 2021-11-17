@@ -48,11 +48,11 @@ export default function ({
         cid,
         t: type || "pageview",
         ${colorDepth ? `sd: screen.colorDepth + "-bits",` : ""}
-        dr: d.referrer || undefined,
-        dt: d.title,
-        dl: l.origin + l.pathname + l.search,
+        dr: document.referrer || undefined,
+        dt: document.title,
+        dl: location.origin + location.pathname + location.search,
         ${language ? `ul: navigator.language.toLowerCase(),` : ""}
-        ${characterSet ? `de: d.characterSet,` : ""}
+        ${characterSet ? `de: document.characterSet,` : ""}
         ${screenSize ? `sr: screen.width + "x" + screen.height,` : ""}
         ${
           screenSize
