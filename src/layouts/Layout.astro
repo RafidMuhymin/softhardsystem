@@ -1,5 +1,5 @@
 ---
-import Spa from "../astro-spa/Spa.astro";
+import { Spa } from "astro-spa";
 import AstroScript from "../components/AstroScript.astro";
 import HeadComponent from "./HeadComponent.astro";
 import Header from "./Header.astro";
@@ -23,8 +23,9 @@ import Footer from "./Footer.astro";
     </main>
     <Footer />
     <Spa
+      analytics={{ trackingID: "UA-168566594-2" }}
       containerSelector="#root"
-      analytics={{ trackingID: "UA-168566594-2" }} />
+      progressBarOptions={{ secondary: true }} />
     <AstroScript src={Astro.resolve("../scripts/layout.js")} />
   </body>
 </html>

@@ -15,18 +15,16 @@ export default function (
   forceRequestIdleCallback,
   highPriorityPrefetch,
   ignores,
+  intersectionObserverOptions,
   limit,
   localLinkDetector,
   prefetch,
   prefetchUpgradation,
   progressBar,
   progressBarOptions,
-  root,
-  rootMargin,
   scanOnMount,
   scrollIntoView,
   scrollIntoViewOptions,
-  threshold,
   timeout
 ) {
   const timeoutString =
@@ -49,9 +47,9 @@ export default function (
     const callback = async () => {
       ${
         cache
-          ? `AstroSpa.cs || caches.delete("spafy");
+          ? `AstroSpa.cs || caches.delete("astro-spa");
       AstroSpa.cs = true;
-      const cache = await caches.open("spafy");
+      const cache = await caches.open("astro-spa");
       const cachePage = async (href) => {
         return cache.put(href, await fetch(href));
       }`
@@ -74,7 +72,7 @@ export default function (
       }
 
       ${
-        observer(delay, prefetch, root, rootMargin, threshold) +
+        observer(delay, intersectionObserverOptions, prefetch) +
         constructPage(
           analytics,
           cache,
