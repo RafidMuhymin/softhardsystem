@@ -1,14 +1,13 @@
 ---
+import Layout from "./Layout.astro";
 import AstroScript from "../../components/AstroScript.astro";
-import Layout from "../Layout.astro";
-import PrevNext from "./PrevNext.astro";
-import Author from "./Author.astro";
-import Rocket from "./Rocket.astro";
-import CommentForm from "./CommentForm.astro";
-import Comments from "./Comments.astro";
-import generateTOC from "./generateTOC.js";
 import Time from "../../components/Time.astro";
 import Taxonomy from "../../components/Taxonomy.astro";
+import PrevNext from "./PostLayoutComponents/PrevNext.astro";
+import Author from "./PostLayoutComponents/Author.astro";
+import CommentForm from "./PostLayoutComponents/CommentForm.astro";
+import Comments from "./PostLayoutComponents/Comments.astro";
+import generateTOC from "./PostLayoutComponents/generateTOC.js";
 
 import { createRequire } from "node:module";
 const moduleRequire = createRequire(import.meta.url);
@@ -71,7 +70,6 @@ const TOC = generateTOC(document);
       class="sidebar md:min-h-0 min-h-screen md:static sticky top-0 self-start w-1/3 md:w-full px-8 md:py-8 py-16">
       <h2 class="pacific toc">Table Of Contents</h2>
       {TOC}
-      <Rocket />
     </section>
   </div>
 
