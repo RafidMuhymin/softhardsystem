@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import PostLayout from "../layouts/PostLayout/PostLayout.astro";
+import PostLayout from "../layouts/PostLayout.astro";
 import fetchWPData from "../data/data.js";
 
 export async function getStaticPaths({ rss }) {
@@ -43,6 +43,17 @@ const { name: description } = post.head_tags.find(
 ).attributes;
 ---
 
-{isPost ? <PostLayout title={title} post={post} prevNext={prevNext} description={description} /> : <Layout title={title} description={description}>
+<!-- prettier-ignore -->
+
+{isPost ?
+  <PostLayout
+    title={title}
+    post={post}
+    prevNext={prevNext}
+    description={description}
+  />
+ :
+  <Layout title={title} description={description}>
     <div class="p-12">{content}</div>
-  </Layout>}
+  </Layout>
+}

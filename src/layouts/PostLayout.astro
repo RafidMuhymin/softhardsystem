@@ -1,17 +1,13 @@
 ---
+import { JSDOM } from "jsdom";
 import Layout from "./Layout.astro";
-import AstroScript from "../../components/AstroScript.astro";
-import Time from "../../components/Time.astro";
-import Taxonomy from "../../components/Taxonomy.astro";
+import Time from "../components/Time.astro";
+import Taxonomy from "../components/Taxonomy.astro";
 import PrevNext from "./PostLayoutComponents/PrevNext.astro";
 import Author from "./PostLayoutComponents/Author.astro";
 import CommentForm from "./PostLayoutComponents/CommentForm.astro";
 import Comments from "./PostLayoutComponents/Comments.astro";
 import generateTOC from "./PostLayoutComponents/generateTOC.js";
-
-import { createRequire } from "node:module";
-const moduleRequire = createRequire(import.meta.url);
-const { JSDOM } = moduleRequire("jsdom");
 
 const { title, post, prevNext, description } = Astro.props;
 const {
@@ -35,10 +31,18 @@ const TOC = generateTOC(document);
   {height}
   {alt}
   link={[{ rel: "preload", href: image, as: "image" }]}
-  article={{ publishedTime: post.date, modifiedTime: post.modified, authors: ["https://www.facebook.com/rafidmuhyminwafi"], section: "Technology", tags: post._embedded["wp:term"][1].map(({ name }) => name) }}>
+  article={{
+    publishedTime: post.date,
+    modifiedTime: post.modified,
+    authors: ["https://www.facebook.com/rafidmuhyminwafi"],
+    section: "Technology",
+    tags: post._embedded["wp:term"][1].map(({ name }) => name),
+  }}
+>
   <div
     slot="wave"
-    class="bg-gradient-to-b from-blue-200 to-[#b9daff] px-16 py-8">
+    class="bg-gradient-to-b from-blue-200 to-[#b9daff] px-16 py-8"
+  >
     <h1 class="pacific !text-red-700">{title}</h1>
     <div class="text-lg text-gray-700 italic">
       By {post._embedded.author[0].name + " • "}
@@ -56,7 +60,8 @@ const TOC = generateTOC(document);
       <div>
         <article>{document.body.innerHTML}</article>
         <div
-          class="flex flex-wrap justify-between items-center italic gap-4 py-4">
+          class="flex flex-wrap justify-between items-center italic gap-4 py-4"
+        >
           <Time time={post.date} />
           <Time time={post.modified} modified />
           <Taxonomy term="topic" array={post._embedded["wp:term"][0]} />
@@ -67,7 +72,8 @@ const TOC = generateTOC(document);
     </section>
 
     <section
-      class="sidebar md:min-h-0 min-h-screen md:static sticky top-0 self-start w-1/3 md:w-full px-8 md:py-8 py-16">
+      class="sidebar md:min-h-0 min-h-screen md:static sticky top-0 self-start w-1/3 md:w-full px-8 md:py-8 py-16"
+    >
       <h2 class="pacific toc">Table Of Contents</h2>
       {TOC}
     </section>
@@ -79,5 +85,5 @@ const TOC = generateTOC(document);
     <Comments />
   </section>
 
-  <AstroScript src={Astro.resolve("../../scripts/postlayout.js")} />
+  <script src="/src/scripts/postlayout.js"></script>
 </Layout>

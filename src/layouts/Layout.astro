@@ -1,14 +1,75 @@
 ---
+import { SEO } from "astro-seo";
 import { Spa } from "astro-spa";
-import AstroScript from "../components/AstroScript.astro";
-import HeadComponent from "./LayoutComponents/HeadComponent.astro";
 import Header from "./LayoutComponents/Header.astro";
 import Footer from "./LayoutComponents/Footer.astro";
+import style from "../styles/astro.scss";
+
+const {
+  title,
+  description,
+  noindex,
+  nofollow,
+  type = "website",
+  image = `/softhardsystem.png`,
+  width = 1024,
+  height = 224,
+  alt = "Soft Hard System",
+  article,
+  link = [],
+  meta = [],
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
-  <HeadComponent {...Astro.props} />
+  <head lang="en-US">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <SEO
+      title={`${title} | Soft Hard System`}
+      {description}
+      {noindex}
+      {nofollow}
+      openGraph={{
+        article,
+        basic: {
+          title,
+          type,
+          image: Astro.site.href.slice(0, -1) + image,
+        },
+        optional: {
+          description,
+        },
+        image: {
+          type: "image/png",
+          width,
+          height,
+          alt,
+        },
+      }}
+      twitter={{
+        card: "summary_large_image",
+        creator: "@wafi_rafid",
+      }}
+      extend={{
+        link: [
+          {
+            rel: "preload",
+            href: "/fonts/itim-v5-latin-regular.woff2",
+            as: "font",
+            crossorigin: "anonymous",
+          },
+        ].concat(link),
+        meta,
+      }}
+    />
+
+    {`<style>${style}</style>`}
+  </head>
+
   <body class="bg-yellow-50">
     <Header />
     <main id="root">
@@ -25,7 +86,8 @@ import Footer from "./LayoutComponents/Footer.astro";
     <Spa
       analytics={{ trackingID: "UA-168566594-2" }}
       containerSelector="#root"
-      progressBarOptions={{ secondary: true }} />
-    <AstroScript src={Astro.resolve("../scripts/layout.js")} />
+      progressBarOptions={{ secondary: true }}
+    />
+    <script src="/src/scripts/layout.js"></script>
   </body>
 </html>

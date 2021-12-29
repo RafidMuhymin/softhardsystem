@@ -10,7 +10,8 @@ const posts = await fetchWPData();
 
 <Layout
   title="The Soft Hard System Blog"
-  description="The front page of the Soft Hard System Blog. Read the latest and most popular articles on Software, Hardware, and System (Coding) by Rafid Muhymin Wafi">
+  description="The front page of the Soft Hard System Blog. Read the latest and most popular articles on Software, Hardware, and System (Coding) by Rafid Muhymin Wafi"
+>
   <div class="flex md:flex-col p-12 gap-12">
     <section class="latests w-2/3 md:w-full">
       <h3 class="pacific">Latest Articles</h3>
@@ -19,7 +20,8 @@ const posts = await fetchWPData();
           const title = post.title.rendered;
           const { slug, modified } = post;
           const excerpt = post.uagb_excerpt.slice(0, -8);
-          return <div class="post-excerpt">
+          return (
+            <div class="post-excerpt">
               <h4>
                 <a href={`/${slug}`}>{title}</a>
               </h4>
@@ -27,12 +29,16 @@ const posts = await fetchWPData();
 
               <div class="flex flex-wrap justify-between items-center gap-2 pt-2 pb-6">
                 <Time time={modified} />
-                <Taxonomy term="category" array={post._embedded["wp:term"][0]} />
+                <Taxonomy
+                  term="category"
+                  array={post._embedded["wp:term"][0]}
+                />
                 <Taxonomy term="tag" array={post._embedded["wp:term"][1]} />
               </div>
 
               <Pushable slug={slug} />
-            </div>;
+            </div>
+          );
         })}
       </div>
     </section>
@@ -41,9 +47,11 @@ const posts = await fetchWPData();
       {posts.map((post) => {
         const title = post.title.rendered;
         const { slug } = post;
-        return <h4 class="flex items-center">
+        return (
+          <h4 class="flex items-center">
             <span class="text-blue-600 p-4">➜</span> <a href={slug}>{title}</a>
-          </h4>;
+          </h4>
+        );
       })}
     </section>
   </div>

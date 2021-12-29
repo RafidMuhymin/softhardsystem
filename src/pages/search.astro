@@ -1,5 +1,4 @@
 ---
-import AstroScript from "../components/AstroScript.astro";
 import Layout from "../layouts/Layout.astro";
 import PopularContents from "../components/PopularContents.astro";
 ---
@@ -12,12 +11,14 @@ import PopularContents from "../components/PopularContents.astro";
       </h1>
       <form
         class="relative mx-auto min-w-[50%]"
-        onsubmit="event.preventDefault();spa.navigate('search?query=' + query.value)">
+        onsubmit="event.preventDefault();spa.navigate('search?query=' + query.value)"
+      >
         <input
           type="text"
           placeholder="Search …"
           name="query"
-          class="form-control w-full" />
+          class="form-control w-full"
+        />
         <input
           type="submit"
           value="🔎"
@@ -31,7 +32,8 @@ import PopularContents from "../components/PopularContents.astro";
             transition-opacity
             duration-300
             hover:opacity-100 hover:cursor-pointer
-          " />
+          "
+        />
       </form>
     </div>
 
@@ -49,7 +51,8 @@ import PopularContents from "../components/PopularContents.astro";
           mx-auto
           rounded-full
           border-[1rem] border-t-[1rem] border-gray-600
-        ">
+        "
+      >
       </div>
     </div>
   </div>
@@ -58,5 +61,5 @@ import PopularContents from "../components/PopularContents.astro";
     <PopularContents />
   </div>
 
-  <AstroScript src={Astro.resolve("../scripts/search.js")} />
+  <script src="/src/scripts/search.js"></script>
 </Layout>

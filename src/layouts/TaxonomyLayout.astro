@@ -16,36 +16,43 @@ const taxonomy = posts.filter((post) =>
 
 <Layout
   title={`The ${name} ${tag ? "Tag" : "Category"} Archive`}
-  description={`The ${tag ? "Tag" : "Category"} Archive for the ${name} keyword of The Soft Hard System Blog`}>
+  description={`The ${
+    tag ? "Tag" : "Category"
+  } Archive for the ${name} keyword of The Soft Hard System Blog`}
+>
   <div class="taxonomy max-w-2xl p-6 mx-auto">
     <h1 class="pacific flex flex-col items-center gap-2">
       {name}
       <small>{taxonomy.length} Articles Found</small>
     </h1>
     <div class="flex flex-col gap-8 p-6">
-      {taxonomy.map((post) => {
-        const { title, slug, modified, uagb_excerpt } = post;
-        const { source_url, alt_text } = post._embedded["wp:featuredmedia"][0];
-        return <section>
-            <a href={`/${slug}`}>
-              <img loading="lazy" width="2048" height="1096" src={source_url} alt={alt_text} />
-            </a>
+      {taxonomy.map(({ title, slug, modified, uagb_excerpt, _embedded }) => (
+        <section>
+          <a href={`/${slug}`}>
+            <img
+              loading="lazy"
+              width="2048"
+              height="1096"
+              src={_embedded["wp:featuredmedia"][0].source_url}
+              alt={_embedded["wp:featuredmedia"][0].alt_text}
+            />
+          </a>
 
-            <h2>
-              <a href={`/${slug}`}>{title.rendered}</a>
-            </h2>
+          <h2>
+            <a href={`/${slug}`}>{title.rendered}</a>
+          </h2>
 
-            <p>{uagb_excerpt.slice(0, -8)}</p>
+          <p>{uagb_excerpt.slice(0, -8)}</p>
 
-            <div class="flex flex-wrap justify-between items-center gap-2 pt-2 pb-6">
-              <Time time={modified} />
-              <Taxonomy term="category" array={post._embedded["wp:term"][0]} />
-              <Taxonomy term="tag" array={post._embedded["wp:term"][1]} />
-            </div>
+          <div class="flex flex-wrap justify-between items-center gap-2 pt-2 pb-6">
+            <Time time={modified} />
+            <Taxonomy term="category" array={_embedded["wp:term"][0]} />
+            <Taxonomy term="tag" array={_embedded["wp:term"][1]} />
+          </div>
 
-            <Pushable slug={slug} />
-          </section>;
-      })}
+          <Pushable slug={slug} />
+        </section>
+      ))}
     </div>
   </div>
 </Layout>

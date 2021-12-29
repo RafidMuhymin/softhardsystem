@@ -1,7 +1,6 @@
 module.exports = {
-  mode: "jit",
   important: false,
-  purge: ["./public/**/*.html", "./src/**/*.{astro,js,jsx,ts,tsx,vue,svelte}"],
+  content: ["./src/**/*.{astro,html,js,jsx,svelte,ts,tsx,vue}"],
   theme: {
     screens: {
       "2xl": { max: "1535px" },

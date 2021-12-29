@@ -1,54 +1,54 @@
 (() => {
   const postlayout = () => {
-    const store = [];
-    [...document.querySelectorAll(".content strong")]
-      .filter((strong) => strong.firstElementChild?.nodeName !== "EM")
-      .forEach((strong) => {
-        strong.innerHTML = strong.innerText
-          .split(" ")
-          .map((word) => `<span>${word}</span>`)
-          .join(" ");
-      });
+    // const store = [];
+    // [...document.querySelectorAll(".content strong")]
+    //   .filter((strong) => strong.firstElementChild?.nodeName !== "EM")
+    //   .forEach((strong) => {
+    //     strong.innerHTML = strong.innerText
+    //       .split(" ")
+    //       .map((word) => `<span>${word}</span>`)
+    //       .join(" ");
+    //   });
 
-    const SVGHolders = document.querySelectorAll(".content strong span");
+    // const SVGHolders = document.querySelectorAll(".content strong span");
 
-    SVGHolders.forEach((span) => {
-      Array.from({ length: 4 }).forEach(() => {
-        const top = Math.random() * 100 - 25;
-        const left = Math.random() * 125 - 25;
-        const length = Math.random() / 1.3 + 0.25;
-        span.innerHTML += `<svg
-                  viewbox="0 0 143 137"
-                  class="star"
-                  style="top: ${top}%; left: ${left}%; width: ${length}rem; height: ${length}rem;"
-                  >
-                  <path d="m55 54-6 41-8-40-41-6 41-8 5-41 8 41 41 5Z" fill="#fc0"/>
-              </svg>`;
-      });
-    });
+    // SVGHolders.forEach((span) => {
+    //   Array.from({ length: 4 }).forEach(() => {
+    //     const top = Math.random() * 100 - 25;
+    //     const left = Math.random() * 125 - 25;
+    //     const length = Math.random() / 1.3 + 0.25;
+    //     span.innerHTML += `<svg
+    //               viewbox="0 0 143 137"
+    //               class="star"
+    //               style="top: ${top}%; left: ${left}%; width: ${length}rem; height: ${length}rem;"
+    //               >
+    //               <path d="m55 54-6 41-8-40-41-6 41-8 5-41 8 41 41 5Z" fill="#fc0"/>
+    //           </svg>`;
+    //   });
+    // });
 
-    const SVGHolderObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        [...entry.target.children].forEach((star, i) => {
-          const id = [...SVGHolders].indexOf(entry.target) * 10 + i;
-          entry.isIntersecting
-            ? (store[id] = setInterval(() => {
-                const top = Math.random() * 100 - 25;
-                const left = Math.random() * 125 - 25;
-                const length = Math.random() / 1.3 + 0.25;
-                const deg = Math.random() * 360;
-                const scale = Math.random() / 1.5 + 1;
-                const style = `top: ${top}%; left: ${left}%; width: ${length}rem; height: ${length}rem; transform: rotate(${deg}deg) scale(${scale})`;
-                star.setAttribute("style", style);
-              }, Math.random() * 300 + 700))
-            : clearInterval(store[id]);
-        });
-      });
-    });
+    // const SVGHolderObserver = new IntersectionObserver((entries) => {
+    //   entries.forEach((entry, i) => {
+    //     [...entry.target.children].forEach((star, i) => {
+    //       const id = [...SVGHolders].indexOf(entry.target) * 10 + i;
+    //       entry.isIntersecting
+    //         ? (store[id] = setInterval(() => {
+    //             const top = Math.random() * 100 - 25;
+    //             const left = Math.random() * 125 - 25;
+    //             const length = Math.random() / 1.3 + 0.25;
+    //             const deg = Math.random() * 360;
+    //             const scale = Math.random() / 1.5 + 1;
+    //             const style = `top: ${top}%; left: ${left}%; width: ${length}rem; height: ${length}rem; transform: rotate(${deg}deg) scale(${scale})`;
+    //             star.setAttribute("style", style);
+    //           }, Math.random() * 300 + 700))
+    //         : clearInterval(store[id]);
+    //     });
+    //   });
+    // });
 
-    SVGHolders.forEach((span) => {
-      SVGHolderObserver.observe(span);
-    });
+    // SVGHolders.forEach((span) => {
+    //   SVGHolderObserver.observe(span);
+    // });
 
     const commentSection = document.querySelector(".comment-section");
     const commentForm = document.querySelector(".comment-form");

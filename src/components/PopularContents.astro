@@ -7,23 +7,24 @@ const posts = (await fetchWPData()).slice(0, 3);
 
 <section class="popular-contents flex flex-col gap-8">
   <h3 class="pacific text-center">Popular Articles</h3>
-  {posts.map((post) => {
-    const { title, slug, uagb_excerpt } = post;
-    const { source_url, alt_text } = post._embedded["wp:featuredmedia"][0];
-    return (
-      <section class="flex md:flex-col gap-8 md:gap-0 items-center">
-        <a class="md:w-full w-2/5" href={`/${slug}`}>
-          <img class="rounded" loading="lazy" src={source_url} alt={alt_text} />
-        </a>
+  {posts.map(({ title, slug, uagb_excerpt, _embedded }) => (
+    <section class="flex md:flex-col gap-8 md:gap-0 items-center">
+      <a class="md:w-full w-2/5" href={`/${slug}`}>
+        <img
+          class="rounded"
+          loading="lazy"
+          src={_embedded["wp:featuredmedia"][0].source_url}
+          alt={_embedded["wp:featuredmedia"][0].alt_text}
+        />
+      </a>
 
-        <div class="md:w-full md:p-2 w-3/5">
-          <h2>
-            <a href={`/${slug}`}>{title.rendered}</a>
-          </h2>
-          <p>{uagb_excerpt.slice(0, -8)}</p>
-          <Pushable slug={slug} />
-        </div>
-      </section>
-    );
-  })}
+      <div class="md:w-full md:p-2 w-3/5">
+        <h2>
+          <a href={`/${slug}`}>{title.rendered}</a>
+        </h2>
+        <p>{uagb_excerpt.slice(0, -8)}</p>
+        <Pushable slug={slug} />
+      </div>
+    </section>
+  ))}
 </section>
