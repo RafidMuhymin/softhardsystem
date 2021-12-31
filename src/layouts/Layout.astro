@@ -84,7 +84,11 @@ const {
       </div>
     </main>
     <Footer />
-    <Spa containerSelector="#root" progressBarOptions={{ secondary: true }} />
+    <Spa
+      analytics={{ trackingID: "UA-168566594-2", fingerpinting: false }}
+      containerSelector="#root"
+      progressBarOptions={{ secondary: true }}
+    />
     <AstroScript src="/src/scripts/layout.js" />
   </body>
 </html>
