@@ -1,9 +1,10 @@
 ---
 import { SEO } from "astro-seo";
 import { Spa } from "astro-spa";
+import styles from "../styles/astro.scss?inline";
 import Header from "./LayoutComponents/Header.astro";
 import Footer from "./LayoutComponents/Footer.astro";
-import styles from "../styles/astro.scss?inline";
+import AstroScript from "../components/AstroScript.astro";
 
 const {
   title,
@@ -88,6 +89,6 @@ const {
       containerSelector="#root"
       progressBarOptions={{ secondary: true }}
     />
-    <script src="/src/scripts/layout.js"></script>
+    <AstroScript src="/src/scripts/layout.js" />
   </body>
 </html>

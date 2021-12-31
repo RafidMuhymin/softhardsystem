@@ -57,33 +57,37 @@ if (!slot) {
       if (src.match("(http://|https://).*")) {
         script += await (await fetch(src)).text();
       } else {
-        const filepath = src.startsWith("/_astro/")
-          ? src.replace("/_astro/", "")
-          : "public" + src;
-        script += fs.readFileSync(filepath, "utf8");
+        let source;
+        src.startsWith("/") && (source = src.slice(1));
+        source.startsWith("src") || (source = "public/" + source);
+        script += fs.readFileSync(source, "utf8");
       }
     }
 
     minify && (script = (await terse(script, minifyOptions)).code);
 
-    inline && (script = "<script>" + script + "</script>");
+    if (inline) {
+      script = "<script>" + script + "</script>";
+    } else {
+      const dir = `${publicPath}/astro-script`;
+      const hash = crypto
+        .createHash("sha256")
+        .update(script)
+        .digest("hex")
+        .substring(0, 8);
+      const basename = typeof src === "string" ? path.basename(src, ".js") : "";
+      const filename = `${basename}-${hash}.js`;
+      const filepath = `${dir}/${filename}`;
 
-    const dir = `${publicPath}/astro-script`;
-    const hash = crypto
-      .createHash("sha256")
-      .update(script)
-      .digest("hex")
-      .substring(0, 8);
-    const filename = `${dir}/${hash}.js`;
+      fs.existsSync(dir) || fs.mkdirSync(dir);
+      fs.existsSync(filepath)
+        ? fs.readFileSync(filepath, "utf8") === script
+          ? fs.writeFileSync(filepath, script)
+          : null
+        : fs.writeFileSync(filepath, script);
 
-    fs.existsSync(dir) || fs.mkdirSync(dir);
-    fs.existsSync(filename)
-      ? fs.readFileSync(filename, "utf8") === script
-        ? fs.writeFileSync(filename, script)
-        : null
-      : fs.writeFileSync(filename, script);
-
-    script = `<script src="/astro-script/${hash}.js"></script>`;
+      script = `<script src="/astro-script/${filename}"></script>`;
+    }
   }
 }
 

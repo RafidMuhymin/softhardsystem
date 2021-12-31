@@ -8,6 +8,7 @@ import Author from "./PostLayoutComponents/Author.astro";
 import CommentForm from "./PostLayoutComponents/CommentForm.astro";
 import Comments from "./PostLayoutComponents/Comments.astro";
 import generateTOC from "./PostLayoutComponents/generateTOC.js";
+import AstroScript from "../components/AstroScript.astro";
 
 const { title, post, prevNext, description } = Astro.props;
 const {
@@ -85,5 +86,5 @@ const TOC = generateTOC(document);
     <Comments />
   </section>
 
-  <script src="/src/scripts/postlayout.js"></script>
+  <AstroScript src="/src/scripts/postlayout.js" />
 </Layout>
