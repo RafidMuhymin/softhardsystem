@@ -3,7 +3,7 @@ import { SEO } from "astro-seo";
 import { Spa } from "astro-spa";
 import Header from "./LayoutComponents/Header.astro";
 import Footer from "./LayoutComponents/Footer.astro";
-import style from "../styles/astro.scss";
+import styles from "../styles/astro.scss?inline";
 
 const {
   title,
@@ -67,7 +67,7 @@ const {
       }}
     />
 
-    {`<style>${style}</style>`}
+    {"<style>" + styles + "</style>"}
   </head>
 
   <body class="bg-yellow-50">

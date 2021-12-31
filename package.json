@@ -11,7 +11,8 @@
     "prettier-plugin-astro": "^0.0.11",
     "subset-font": "^1.4.0",
     "tailwindcss": "^3.0.7",
-    "terser": "^5.10.0"
+    "terser": "^5.10.0",
+    "vite-plugin-singlefile": "^0.6.2"
   },
   "scripts": {
     "start": "astro dev --verbose",
