@@ -54,7 +54,7 @@ if (!slot) {
 
   if (dev) {
     for (const src of sources) {
-      if (src.match("(http://|https://).*")) {
+      if (src.match("(http://|https://|data:).*")) {
         script += await (await fetch(src)).text();
       } else {
         let source;
