@@ -19,6 +19,7 @@
 }
 
 :root {
+  font-family: Itim, "Comic Sans MS", ui-sans-serif, system-ui, sans-serif;
   @include pfz.poly-fluid-sizing(
     "font-size",
     (
