@@ -1,25 +1,21 @@
 @use "poly-fluid-sizing" as pfz;
 
-/* itim-regular - latin */
 @font-face {
-  font-family: "Itim";
+  font-family: "Metrisch";
   font-style: normal;
   font-weight: 400;
-  font-display: optional;
-  src: url("/fonts/itim-v5-latin-regular.eot"); /* IE9 Compat Modes */
+  font-display: swap;
+  src: url("/fonts/Metrisch-Medium-webfont.eot");
   src: local(""),
-    url("/fonts/itim-v5-latin-regular.eot?#iefix") format("embedded-opentype"),
-    /* IE6-IE8 */ url("/fonts/itim-v5-latin-regular.woff2") format("woff2"),
-    /* Super Modern Browsers */ url("/fonts/itim-v5-latin-regular.woff")
-      format("woff"),
-    /* Modern Browsers */ url("/fonts/itim-v5-latin-regular.ttf")
-      format("truetype"),
-    /* Safari, Android, iOS */ url("/fonts/itim-v5-latin-regular.svg#Itim")
-      format("svg"); /* Legacy iOS */
+    url("/fonts/Metrisch-Medium-webfont.eot?#iefix") format("embedded-opentype"),
+    url("/fonts/Metrisch-Medium-webfont.woff2") format("woff2"),
+    url("/fonts/Metrisch-Medium-webfont.woff") format("woff"),
+    url("/fonts/Metrisch-Medium-webfont.ttf") format("truetype"),
+    url("/fonts/Metrisch-Medium-webfont.svg#Metrisch") format("svg");
 }
 
 :root {
-  font-family: Itim, "Comic Sans MS", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Metrisch", sans-serif;
   @include pfz.poly-fluid-sizing(
     "font-size",
     (
@@ -90,6 +86,5 @@ small {
 
 em,
 .pacific {
-  font-family: Itim, "Comic Sans MS", ui-sans-serif, system-ui, sans-serif;
   color: crimson;
 }
