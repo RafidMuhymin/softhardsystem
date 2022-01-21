@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "astro": "^0.22.1",
+    "astro": "^0.22.17",
     "astro-script": "^0.1.1",
     "astro-seo": "^0.4.2",
-    "astro-spa": "^1.3.3",
+    "astro-spa": "1.3.5",
     "autoprefixer": "^10.4.0",
     "csso": "^5.0.2",
     "jsdom": "^19.0.0",

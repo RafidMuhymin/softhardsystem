@@ -31,7 +31,7 @@ let chars = "!";
 
 allFiles.forEach((file) => {
   const content = fs.readFileSync(file, "utf-8");
-  const { document } = new JSDOM(content).window;
+  const { document, location } = new JSDOM(content).window;
   const styleElement = document.querySelector("style");
   document.querySelectorAll("em, .pacific").forEach((node) => {
     chars += node.textContent;
@@ -42,24 +42,35 @@ allFiles.forEach((file) => {
     comments: "exclamation",
   });
   styleElement.textContent = css;
+
+  if (
+    ["/update-ubuntu-terminal", "/install-usb-modem-ubuntu"].includes(
+      location.pathname
+    )
+  ) {
+    Array.from({ length: 29 }).forEach(() => {
+      document.head.appendChild(document.body.firstElementChild);
+    });
+  }
+
+  if (["/node-fetch"].includes(location.pathname)) {
+    Array.from({ length: 28 }).forEach(() => {
+      document.head.appendChild(document.body.firstElementChild);
+    });
+  }
+
+  if (["/terms", "/privacy-policy"].includes(location.pathname)) {
+    document.querySelector("#root").appendChild(document.body.lastElementChild);
+    Array.from({ length: 21 }).forEach(() => {
+      document.head.appendChild(document.body.firstElementChild);
+    });
+  }
+
   fs.writeFileSync(
     file,
     "<!DOCTYPE html>" + document.documentElement.outerHTML
   );
 });
 
-console.log("Finished minifying CSS in", new Date() - start, "ms");
+console.log("Finished PostBuild in", new Date() - start, "ms");
 
-(async () => {
-  const itimBuffer = Buffer.from(
-    fs.readFileSync("public/fonts/itim-v5-latin-regular.woff2")
-  );
-
-  const itimSubsetBuffer = await subsetFont(itimBuffer, chars, {
-    targetFormat: "woff2",
-  });
-
-  fs.writeFileSync("dist/fonts/itim-v5-latin-regular.woff2", itimSubsetBuffer);
-})();
-
-console.log("Finished subsetting fonts in", new Date() - start, "ms");
