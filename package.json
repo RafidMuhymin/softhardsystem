@@ -15,6 +15,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "preview": "astro preview",
     "build": "astro build && node postbuild.js"
   },
   "devDependencies": {
