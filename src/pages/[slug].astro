@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import PostLayout from "../layouts/PostLayout.astro";
 import fetchWPData from "../data/data.js";
+import LegalDocs from "../layouts/PostLayoutComponents/LegalDocs.astro";
 
 export async function getStaticPaths({ rss }) {
   const posts = await fetchWPData();
@@ -51,7 +52,5 @@ const { name: description } = post.head_tags.find(
     description={description}
   />
  :
-  <Layout title={title} description={description}>
-    <div class="p-12" set:html={content} />
-  </Layout>
+  <LegalDocs {title} {description} {content} />
 }
