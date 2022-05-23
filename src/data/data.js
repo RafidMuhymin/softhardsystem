@@ -2,18 +2,18 @@ import fs from "fs";
 import path from "path";
 import { JSDOM } from "jsdom";
 
-const { token } = await (
-  await fetch(import.meta.env.PUBLIC_JWT_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      username: import.meta.env.PUBLIC_WP_USERNAME,
-      password: import.meta.env.PUBLIC_WP_PASS,
-    }),
-  })
-).json();
+const response = await fetch(import.meta.env.PUBLIC_JWT_API_URL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    username: import.meta.env.PUBLIC_WP_USERNAME,
+    password: import.meta.env.PUBLIC_WP_PASS,
+  }),
+});
+
+const { token } = await response.json();
 
 const data = await (
   await fetch(import.meta.env.PUBLIC_WPAPI_URL, {

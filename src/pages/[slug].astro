@@ -43,8 +43,6 @@ const { name: description } = post.head_tags.find(
 ).attributes;
 ---
 
-<!-- prettier-ignore -->
-
 {isPost ?
   <PostLayout
     title={title}
@@ -54,6 +52,6 @@ const { name: description } = post.head_tags.find(
   />
  :
   <Layout title={title} description={description}>
-    <div class="p-12">{content}</div>
+    <div class="p-12" set:html={content} />
   </Layout>
 }

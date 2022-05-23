@@ -2,7 +2,7 @@
   <h2 class="comment-header">Leave a comment</h2>
   <h2 class="reply-header text-center hidden"></h2>
   <form class="comment-form flex flex-col">
-    <input class="hidden" type="text" name="post" value="{Astro.props.id}" />
+    <input class="hidden" type="text" name="post" value={Astro.props.id} />
     <input class="hidden" type="text" name="parent" value="0" />
     <div class="grid grid-cols-2 gap-4">
       <label class="self-end flex flex-col"

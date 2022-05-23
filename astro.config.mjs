@@ -1,6 +1,4 @@
 export default {
-  buildOptions: {
-    site: "https://softhardsystem.com/",
-  },
   vite: {},
+  site: "https://softhardsystem.com/",
 };

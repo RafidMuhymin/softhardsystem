@@ -1,10 +1,9 @@
 ---
 import { SEO } from "astro-seo";
 import { Spa } from "astro-spa";
-import styles from "../styles/astro.scss?inline";
+import styles from "../styles/astro.scss";
 import Header from "./LayoutComponents/Header.astro";
 import Footer from "./LayoutComponents/Footer.astro";
-import AstroScript from "../components/AstroScript.astro";
 
 const {
   title,
@@ -67,8 +66,8 @@ const {
         meta,
       }}
     />
-
-    {"<style>" + styles + "</style>"}
+    
+    <style set:html={styles} />
   </head>
 
   <body class="bg-yellow-50">
@@ -84,11 +83,13 @@ const {
       </div>
     </main>
     <Footer />
+
     <Spa
       progressBar={false}
       analytics={{ trackingID: "UA-168566594-2", fingerprinting: false }}
       progressBarOptions={{ secondary: true }}
     />
-    <AstroScript src="/src/scripts/layout.js" />
+
+    <script src="../scripts/layout.js" />
   </body>
 </html>
